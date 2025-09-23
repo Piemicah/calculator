@@ -94,10 +94,13 @@ export default function Index() {
       } else {
         if (label === ")") {
           if (openBrackets > 0) {
-            // const isFunction = functionStack[functionStack.length - 1] || false;
+            const isFunction = functionStack[functionStack.length - 1] || false;
+            setDisplayExpression(
+              (prev) => prev + (isFunction ? ")}" : (keys[label].latex ?? ")"))
+            );
             const closingLatex = getClosingLatex(internalExpression);
             console.log(closingLatex);
-            setDisplayExpression((prev) => prev + closingLatex);
+            // setDisplayExpression((prev) => prev + closingLatex);
             setInternalExpression(internalExpression + ")");
             setOpenBrackets((prev) => prev - 1);
             setFunctionStack((prev) => prev.slice(0, -1)); // Remove the last function flag
@@ -124,7 +127,6 @@ export default function Index() {
 
       if (shiftPressed && multipliersKeys.includes(label)) {
         const multi = multipliers[label];
-        console.log(multi);
         setDisplayExpression(displayExpression + (keys[multi].latex ?? multi));
         setInternalExpression(internalExpression + keys[multi].value);
       }
@@ -147,7 +149,6 @@ export default function Index() {
       tempFunctionStack = tempFunctionStack.slice(0, -1);
       bracketsToClose--;
     }
-    console.log(formatted);
     return formatted || "0";
   };
 
@@ -163,6 +164,7 @@ export default function Index() {
     return internalFormated;
   };
   console.log(internalExpression);
+  console.log(displayExpression);
   return (
     <SafeAreaView
       className={`flex-1 justify-between items-center ${bgColor} ${isLandscape ? "pt-0 px-3" : "pt-10 px-2"}`}
@@ -247,16 +249,16 @@ export default function Index() {
               <SmallButton label="√" cap1="∛" fxn={btnClicked} />
               <SmallButton label="x²" cap1="x³" mid="DEC" />
               <SmallButton label="⋀" cap1="ˣ√" mid="HEX" />
-              <SmallButton label="log" cap1="10ˣ" mid="BIN" />
-              <SmallButton label="ln" cap1="eˣ" mid="OCT" />
+              <SmallButton label="log" cap1="10ˣ" mid="BIN" fxn={btnClicked} />
+              <SmallButton label="ln" cap1="eˣ" mid="OCT" fxn={btnClicked} />
             </View>
             <View className="flex-row justify-between w-full">
               <SmallButton label="( - )" cap1="[∠]" mid="A" />
               <SmallButton label="° ' ' '" cap1="&#x27F5;" mid="B" />
               <SmallButton label="hyp" mid="C" />
               <SmallButton label="sin" cap1="sin¯¹" mid="D" fxn={btnClicked} />
-              <SmallButton label="cos" cap1="cos¯¹" mid="E" />
-              <SmallButton label="tan" cap1="tan¯¹" mid="F" />
+              <SmallButton label="cos" cap1="cos¯¹" mid="E" fxn={btnClicked} />
+              <SmallButton label="tan" cap1="tan¯¹" mid="F" fxn={btnClicked} />
             </View>
             <View className="flex-row justify-between w-full">
               <SmallButton label="RCL" cap1="STO" />
