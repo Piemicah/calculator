@@ -3,7 +3,7 @@ import useOrientation from "@/hooks/useOrientation";
 import React, { ReactNode } from "react";
 import { View } from "react-native";
 
-const DisplayScreen = ({ children }: { children: ReactNode }) => {
+const Display = ({ children }: { children: ReactNode }) => {
   const { theme } = useTheme();
   const { isLandscape } = useOrientation();
 
@@ -16,4 +16,4 @@ const DisplayScreen = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default DisplayScreen;
+export default Display;

@@ -1,15 +1,18 @@
 import BigButton from "@/components/BigButton";
 import DisplayScreen from "@/components/DisplayScreen";
+import MathQuillEditor, {
+  MathQuillEditorRef,
+} from "@/components/MathQuillEditor";
 import NormalButton from "@/components/NormalButton";
 import OptionDisplay from "@/components/OptionDisplay";
 import SmallButton from "@/components/SmallButton";
 import { Colors } from "@/constants/Colors";
 import { useTheme } from "@/hooks/themeContext";
 import useOrientation from "@/hooks/useOrientation";
-import { keys } from "@/util/keypads";
+import { keys, shiftFunctions } from "@/util/keypads";
 import { Ionicons } from "@expo/vector-icons";
-import * as math from "mathjs";
-import { useState } from "react";
+import { all, create } from "mathjs";
+import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -23,148 +26,119 @@ export default function Index() {
   const [internalExpression, setInternalExpression] = useState<string>("");
   const [answer, setAnswer] = useState<string>("0");
   const [ansMemory, setAnsMemory] = useState<string>("0");
-  const [openBrackets, setOpenBrackets] = useState(0);
-  const [functionStack, setFunctionStack] = useState<boolean[]>([]); // Track if open parenthesis is from a function
+  const [degrees, setDegrees] = useState<boolean>(true);
+  const [latex, setLatex] = useState<string>("");
+  const mathRef = useRef<MathQuillEditorRef>(null);
 
   const bgColor = `bg-${theme}-panel`;
   const optionTxtColor = `text-${theme}-bigButton`;
+
+  const math = create(all);
+
+  // override with degree-based versions
+  if (degrees) {
+    // keep references to the original radian functions
+    const sinRad = math.sin;
+    const cosRad = math.cos;
+    const tanRad = math.tan;
+    const asinRad = math.asin;
+    const acosRad = math.acos;
+    const atanRad = math.atan;
+
+    math.import(
+      {
+        // forward trig (expects degrees)
+        sin: (x: number) => sinRad(math.unit(x, "deg")),
+        cos: (x: number) => cosRad(math.unit(x, "deg")),
+        tan: (x: number) => tanRad(math.unit(x, "deg")),
+
+        asin: (x: number) => math.unit(asinRad(x), "rad").toNumber("deg"),
+        acos: (x: number) => math.unit(acosRad(x), "rad").toNumber("deg"),
+        atan: (x: number) => math.unit(atanRad(x), "rad").toNumber("deg"),
+      },
+      { override: true }
+    );
+  }
 
   const handleModal = () => {
     setModalVisible(!modalVisible);
   };
 
-  const specialBtns = ["DEL", "AC", "Ans", "="];
-  const multipliers: Record<string, string> = {
-    "1": "f",
-    "2": "p",
-    "3": "n",
-    "4": "µ",
-    "5": "m",
-    "6": "k",
-    "7": "M",
-    "8": "G",
-    "9": "T",
-    ENG: "i",
+  const specialBtns = ["DEL", "AC", "="];
+
+  const latexToExpression = (latex: string): string => {
+    const expression = latex
+      .replace(/{/g, "(")
+      .replace(/}/g, ")")
+      .replace(/\\times/g, "*")
+      .replace(/\\div/g, "/")
+      .replace(/\\log/g, "log10")
+      .replace(/\\ln/g, "log")
+      .replace(/\\pi/g, "pi")
+      .replace(/\\sqrt\[3\]/g, "cbrt")
+      .replace(/\\sqrt\[(\d+)\]\((\d+)\)/g, "$2^(1/$1)")
+      .replace(/\\sqrt/g, "sqrt")
+      .replace(/\\sin\^\(-1\)\(([\S]+)\)/g, "asin($1)")
+      .replace(/\\sin/g, "sin")
+      .replace(/\\cos\(([\S]+)\)/g, "cos(($1) deg)")
+      .replace(/\\tan\(([\S]+)\)/g, "tan(($1) deg)")
+      .replace(/Ans/g, `${ansMemory}`);
+    return expression;
   };
-
-  const getClosingLatex = (expr: string): string => {
-    const functionKeywords = ["sqrt(", "sin(", "cos(", "tan(", "log(", "ln("];
-
-    for (let fn of functionKeywords) {
-      if (expr.endsWith(fn) || (expr.includes(fn) && !expr.includes(")"))) {
-        return ")}"; // Close the LaTeX block
-      }
-    }
-    return ")"; // Default case: normal parenthesis
-  };
-
   const btnClicked = (label: string) => {
+    const shiftFunctionsKeys: string[] = Object.keys(shiftFunctions);
+
+    label =
+      shiftPressed && shiftFunctionsKeys.includes(label)
+        ? shiftFunctions[label]
+        : label;
     try {
       if (specialBtns.includes(label)) {
         switch (label) {
           case "AC":
-            setDisplayExpression("");
+            mathRef.current?.clear();
             setAnswer("0");
-            setInternalExpression("");
-            setOpenBrackets(0);
             break;
           case "DEL":
-            setDisplayExpression(displayExpression.slice(0, -1));
-            setInternalExpression(internalExpression.slice(0, -1));
+            mathRef.current?.deleteLeft();
+
             break;
           case "=":
-            const formatedInternalExpression = getFormattedInternalExpression();
-            const ans = math.evaluate(
-              formatedInternalExpression
-                .replace(/Ans/g, ansMemory)
-                .replace(/sin(([^)]+))/g, "sin(($1) deg)")
-                .replace(/cos\(([^)]+)\)/g, "cos(($1) deg)")
-                .replace(/tan\(([^)]+)\)/g, "tan(($1) deg)")
-            );
+            const expr = latexToExpression(latex);
+            const ans = math.evaluate(expr);
 
             setAnswer(String(ans));
             setAnsMemory(String(ans));
             break;
-
-          case "Ans":
-            setDisplayExpression((prev) => prev + "Ans");
-            setInternalExpression(internalExpression + "Ans");
-            break;
         }
       } else {
-        if (label === ")") {
-          if (openBrackets > 0) {
-            const isFunction = functionStack[functionStack.length - 1] || false;
-            setDisplayExpression(
-              (prev) => prev + (isFunction ? ")}" : (keys[label].latex ?? ")"))
-            );
-            const closingLatex = getClosingLatex(internalExpression);
-            console.log(closingLatex);
-            // setDisplayExpression((prev) => prev + closingLatex);
-            setInternalExpression(internalExpression + ")");
-            setOpenBrackets((prev) => prev - 1);
-            setFunctionStack((prev) => prev.slice(0, -1)); // Remove the last function flag
-          }
-        } else {
-          if (keys[label].isFunction) {
-            setDisplayExpression((prev) => prev + (keys[label].latex ?? label));
-            setInternalExpression((prev) => prev + keys[label].value);
-            setOpenBrackets((prev) => prev + 1);
-            setFunctionStack((prev) => [...prev, true]); // Mark as function parenthesis
-          } else {
-            setDisplayExpression((prev) => prev + (keys[label].latex ?? label));
-            setInternalExpression(internalExpression + keys[label].value);
-            if (keys[label].value === "(") {
-              setOpenBrackets((prev) => prev + 1);
-              setFunctionStack((prev) => [...prev, false]); // Mark as regular parenthesis
-            }
-          }
-        }
+        mathRef.current?.insert(keys[label].latex ?? label);
       }
 
-      // Scientific Multipliers
-      const multipliersKeys = Object.keys(multipliers);
+      // Scientific shiftFunctions
 
-      if (shiftPressed && multipliersKeys.includes(label)) {
-        const multi = multipliers[label];
+      if (shiftPressed && shiftFunctionsKeys.includes(label)) {
+        const multi = shiftFunctions[label];
         setDisplayExpression(displayExpression + (keys[multi].latex ?? multi));
-        setInternalExpression(internalExpression + keys[multi].value);
+        // setInternalExpression(internalExpression + keys[multi].value);
       }
     } catch (error: any) {
       setAnswer("Math error!");
     } finally {
       setShiftPressed(false);
+      setAlphaPressed(false);
     }
   };
 
-  // Format display expression with proper closing brackets for functions
-  const getFormattedDisplay = () => {
-    let formatted = displayExpression;
-    let bracketsToClose = openBrackets;
-    let tempFunctionStack = [...functionStack];
-    while (bracketsToClose > 0) {
-      const isFunction =
-        tempFunctionStack[tempFunctionStack.length - 1] || false;
-      formatted += isFunction ? "}" : ")"; // Close with ) for functions, } for LaTeX
-      tempFunctionStack = tempFunctionStack.slice(0, -1);
-      bracketsToClose--;
-    }
-    return formatted || "0";
+  const directionKeyClicked = (label: string) => {
+    // mathRef.current?.focus();
+    if (label === "◀") mathRef.current?.moveLeft(1);
+    else mathRef.current?.moveRight(1);
   };
 
-  // Format internal expression with proper closing brackets for functions
-  const getFormattedInternalExpression = () => {
-    let internalFormated = internalExpression;
-    let bracketsToClose = openBrackets;
-    while (bracketsToClose > 0) {
-      internalFormated += ")";
-      bracketsToClose--;
-    }
+  console.log({ expr: latexToExpression(latex) });
+  console.log({ latex });
 
-    return internalFormated;
-  };
-  console.log(internalExpression);
-  console.log(displayExpression);
   return (
     <SafeAreaView
       className={`flex-1 justify-between items-center ${bgColor} ${isLandscape ? "pt-0 px-3" : "pt-10 px-2"}`}
@@ -190,11 +164,21 @@ export default function Index() {
           <Text className={`${optionTxtColor}  text-[11px] font-bold`}>
             DECI
           </Text>
+          <TouchableOpacity
+            onPress={() => {
+              setDegrees(!degrees);
+            }}
+          >
+            <Text className={`${optionTxtColor}  text-[11px] font-bold`}>
+              {degrees ? "DEG" : "RAD"}
+            </Text>
+          </TouchableOpacity>
         </View>
-        <DisplayScreen
-          displayExpression={getFormattedDisplay()}
-          answer={answer}
-        />
+
+        <DisplayScreen>
+          <MathQuillEditor ref={mathRef} initialLatex="" onChange={setLatex} />
+          <Text className="text-[18px] text-right">{answer}</Text>
+        </DisplayScreen>
       </View>
       <View
         className={`${isLandscape ? "flex-row gap-3 items-end" : "flex-col"}`}
@@ -239,16 +223,16 @@ export default function Index() {
             <View className="flex-row justify-between w-full">
               <SmallButton label="CALC" cap1="SOLVE" mid="=" />
               <SmallButton label="∫dx" cap1="d/dx" mid=":" />
-              <SmallButton label="&#x25C0;" cap1=" " />
-              <SmallButton label="&#x25B6;" cap1=" " />
-              <SmallButton label="x¯¹" cap1="x!" mid="LOGIC" />
+              <SmallButton label="◀" cap1=" " fxn={directionKeyClicked} />
+              <SmallButton label="▶" cap1=" " fxn={directionKeyClicked} />
+              <SmallButton label="x¯¹" cap1="x!" mid="LOGIC" fxn={btnClicked} />
               <SmallButton label="CONS" cap2="CONV" />
             </View>
             <View className="flex-row justify-between w-full">
               <SmallButton label="a b/c" cap1="d/c" />
               <SmallButton label="√" cap1="∛" fxn={btnClicked} />
-              <SmallButton label="x²" cap1="x³" mid="DEC" />
-              <SmallButton label="⋀" cap1="ˣ√" mid="HEX" />
+              <SmallButton label="x²" cap1="x³" mid="DEC" fxn={btnClicked} />
+              <SmallButton label="xⁿ" cap1="ˣ√" mid="HEX" fxn={btnClicked} />
               <SmallButton label="log" cap1="10ˣ" mid="BIN" fxn={btnClicked} />
               <SmallButton label="ln" cap1="eˣ" mid="OCT" fxn={btnClicked} />
             </View>
