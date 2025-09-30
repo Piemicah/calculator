@@ -4,16 +4,16 @@ type KeyType = Record<
 >;
 
 export const keys: KeyType = {
-  "7": { value: "7", shift: "\\times 10^6" },
-  "8": { value: "8", shift: "\\times 10^9" },
-  "9": { value: "9", shift: "\\times 10^{12}" },
-  "÷": { value: "\\div" },
   "1": { value: "1", shift: "\\times 10^{-15}" },
   "2": { value: "2", shift: "\\times 10^{-12}" },
   "3": { value: "3", shift: "\\times 10^{-9}" },
   "4": { value: "4", shift: "\\times 10^{-6}" },
   "5": { value: "5", shift: "\\times 10^{-3}" },
   "6": { value: "6", shift: "\\times 10^3" },
+  "7": { value: "7", shift: "\\times 10^6" },
+  "8": { value: "8", shift: "\\times 10^9" },
+  "9": { value: "9", shift: "\\times 10^{12}" },
+  "÷": { value: "\\div" },
   "×": { value: "\\times" },
   "-": { value: "-" },
   "0": { value: "0" },
