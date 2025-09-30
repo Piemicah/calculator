@@ -28,7 +28,7 @@ const BigButton = ({ label, cap1, cap2, mid, fxn }: ButtonType) => {
           }}
           className={`justify-center items-center w-[55px] h-[33px] rounded-tl-[4px] rounded-tr-[4px] rounded-bl-[10px] rounded-br-[10px] border-t shadow-black border-l border-l-${theme}-hilite border-t-${theme}-hilite ${bgColor}`}
         >
-          <Text className={`text-[18px] text-${theme}-num`}>{label}</Text>
+          <Text className={`text-[20px] text-${theme}-num`}>{label}</Text>
         </TouchableOpacity>
       </View>
     </View>

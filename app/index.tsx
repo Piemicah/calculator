@@ -9,7 +9,7 @@ import SmallButton from "@/components/SmallButton";
 import { Colors } from "@/constants/Colors";
 import { useTheme } from "@/hooks/themeContext";
 import useOrientation from "@/hooks/useOrientation";
-import { keys, shiftFunctions } from "@/util/keypads";
+import { keys } from "@/util/keypads";
 import { Ionicons } from "@expo/vector-icons";
 import { all, create } from "mathjs";
 import { useRef, useState } from "react";
@@ -80,20 +80,21 @@ export default function Index() {
       .replace(/\\sqrt/g, "sqrt")
       .replace(/\\sin\^\(-1\)\(([\S]+)\)/g, "asin($1)")
       .replace(/\\sin/g, "sin")
-      .replace(/\\cos\(([\S]+)\)/g, "cos(($1) deg)")
-      .replace(/\\tan\(([\S]+)\)/g, "tan(($1) deg)")
+      .replace(/\\cos\^\(-1\)\(([\S]+)\)/g, "acos($1)")
+      .replace(/\\cos/g, "cos")
+      .replace(/\\tan\^\(-1\)\(([\S]+)\)/g, "atan($1)")
+      .replace(/\\tan/g, "tan")
+      .replace(/\\frac\(([\S]+)\)\(([\S]+)\)/g, "(($1)/($2))")
       .replace(/Ans/g, `${ansMemory}`);
     return expression;
   };
-  const btnClicked = (label: string) => {
-    const shiftFunctionsKeys: string[] = Object.keys(shiftFunctions);
-
-    label =
-      shiftPressed && shiftFunctionsKeys.includes(label)
-        ? shiftFunctions[label]
-        : label;
+  const btnClicked = (key: string) => {
+    const label = (
+      shiftPressed && keys[key].shift ? keys[key].shift : keys[key].value
+    ) as string;
+    console.log(label);
     try {
-      if (specialBtns.includes(label)) {
+      if (specialBtns.includes(key)) {
         switch (label) {
           case "AC":
             mathRef.current?.clear();
@@ -112,27 +113,19 @@ export default function Index() {
             break;
         }
       } else {
-        mathRef.current?.insert(keys[label].latex ?? label);
-      }
-
-      // Scientific shiftFunctions
-
-      if (shiftPressed && shiftFunctionsKeys.includes(label)) {
-        const multi = shiftFunctions[label];
-        setDisplayExpression(displayExpression + (keys[multi].latex ?? multi));
-        // setInternalExpression(internalExpression + keys[multi].value);
+        mathRef.current?.insert(label);
       }
     } catch (error: any) {
-      setAnswer("Math error!");
+      setAnswer("Asise isiro!");
     } finally {
       setShiftPressed(false);
       setAlphaPressed(false);
     }
   };
 
-  const directionKeyClicked = (label: string) => {
+  const directionKeyClicked = (key: string) => {
     // mathRef.current?.focus();
-    if (label === "◀") mathRef.current?.moveLeft(1);
+    if (key === "◀") mathRef.current?.moveLeft(1);
     else mathRef.current?.moveRight(1);
   };
 
@@ -229,7 +222,7 @@ export default function Index() {
               <SmallButton label="CONS" cap2="CONV" />
             </View>
             <View className="flex-row justify-between w-full">
-              <SmallButton label="a b/c" cap1="d/c" />
+              <SmallButton label="a b/c" cap1="d/c" fxn={btnClicked} />
               <SmallButton label="√" cap1="∛" fxn={btnClicked} />
               <SmallButton label="x²" cap1="x³" mid="DEC" fxn={btnClicked} />
               <SmallButton label="xⁿ" cap1="ˣ√" mid="HEX" fxn={btnClicked} />
@@ -247,14 +240,14 @@ export default function Index() {
             <View className="flex-row justify-between w-full">
               <SmallButton label="RCL" cap1="STO" />
               <SmallButton
-                label="ENG"
+                label="i"
                 cap1="&#x27F5;"
-                cap2="i"
+                cap2="j"
                 fxn={btnClicked}
               />
-              <SmallButton label="(" cap1="[arg]" fxn={btnClicked} />
-              <SmallButton label=")" cap1="[Abs]" mid="X" fxn={btnClicked} />
-              <SmallButton label="," cap1=";" mid="Y" />
+              <SmallButton label="(" cap1="[" fxn={btnClicked} />
+              <SmallButton label=")" cap1="]" mid="X" fxn={btnClicked} />
+              <SmallButton label="," cap1=";" mid="Y" fxn={btnClicked} />
               <SmallButton label="M+" cap1="M-" mid="M" />
             </View>
           </View>
