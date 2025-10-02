@@ -4,19 +4,19 @@ import MathQuillEditor, {
   MathQuillEditorRef,
 } from "@/components/MathQuillEditor";
 import NormalButton from "@/components/NormalButton";
-import OptionDisplay from "@/components/OptionDisplay";
 import SmallButton from "@/components/SmallButton";
 import { Colors } from "@/constants/Colors";
 import { useTheme } from "@/hooks/themeContext";
 import useOrientation from "@/hooks/useOrientation";
 import { keys } from "@/util/keypads";
 import { Ionicons } from "@expo/vector-icons";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { all, create } from "mathjs";
 import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Index() {
+export default function MainScreen() {
   const { theme, setTheme } = useTheme();
   const { isLandscape } = useOrientation();
   const [shiftPressed, setShiftPressed] = useState<boolean>(false);
@@ -29,6 +29,8 @@ export default function Index() {
   const [degrees, setDegrees] = useState<boolean>(true);
   const [latex, setLatex] = useState<string>("");
   const mathRef = useRef<MathQuillEditorRef>(null);
+
+  const navigation = useNavigation();
 
   const bgColor = `bg-${theme}-panel`;
   const optionTxtColor = `text-${theme}-bigButton`;
@@ -61,10 +63,11 @@ export default function Index() {
   }
 
   const handleModal = () => {
-    setModalVisible(!modalVisible);
+    navigation.dispatch(DrawerActions.openDrawer());
+    //setModalVisible(!modalVisible);
   };
 
-  const specialBtns = ["DEL", "AC", "="];
+  const specialBtns = ["DEL", "AC", "=", "◀", "▶"];
 
   const latexToExpression = (latex: string): string => {
     const expression = latex
@@ -102,8 +105,8 @@ export default function Index() {
             break;
           case "DEL":
             mathRef.current?.deleteLeft();
-
             break;
+
           case "=":
             const expr = latexToExpression(latex);
             const ans = math.evaluate(expr);
@@ -111,6 +114,11 @@ export default function Index() {
             setAnswer(String(ans));
             setAnsMemory(String(ans));
             break;
+
+          case "◀":
+          case "▶":
+            if (key === "◀") mathRef.current?.moveLeft(1);
+            else mathRef.current?.moveRight(1);
         }
       } else {
         mathRef.current?.insert(label);
@@ -121,12 +129,6 @@ export default function Index() {
       setShiftPressed(false);
       setAlphaPressed(false);
     }
-  };
-
-  const directionKeyClicked = (key: string) => {
-    // mathRef.current?.focus();
-    if (key === "◀") mathRef.current?.moveLeft(1);
-    else mathRef.current?.moveRight(1);
   };
 
   console.log({ expr: latexToExpression(latex) });
@@ -196,11 +198,6 @@ export default function Index() {
               />
             </TouchableOpacity>
 
-            <OptionDisplay
-              modalVisible={modalVisible}
-              setModalVisible={setModalVisible}
-            />
-
             <NormalButton label="" />
             <NormalButton label="" />
             <SmallButton
@@ -216,8 +213,8 @@ export default function Index() {
             <View className="flex-row justify-between w-full">
               <SmallButton label="CALC" cap1="SOLVE" mid="=" />
               <SmallButton label="∫dx" cap1="d/dx" mid=":" />
-              <SmallButton label="◀" cap1=" " fxn={directionKeyClicked} />
-              <SmallButton label="▶" cap1=" " fxn={directionKeyClicked} />
+              <SmallButton label="◀" cap1=" " fxn={btnClicked} />
+              <SmallButton label="▶" cap1=" " fxn={btnClicked} />
               <SmallButton label="x¯¹" cap1="x!" mid="LOGIC" fxn={btnClicked} />
               <SmallButton label="CONS" cap2="CONV" />
             </View>

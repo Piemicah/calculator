@@ -12,7 +12,7 @@ const Formula = () => {
         <TouchableOpacity
           className="justify-center rounded-full size-8 "
           onPress={() => {
-            router.push("/");
+            router.push("/main/mainScreen");
           }}
         >
           <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />

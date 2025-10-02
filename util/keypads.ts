@@ -38,4 +38,6 @@ export const keys: KeyType = {
   i: { value: "i" },
   Ans: { value: "Ans" },
   "a b/c": { value: "\\frac{}{}" },
+  "◀": { value: "◀" },
+  "▶": { value: "▶" },
 };

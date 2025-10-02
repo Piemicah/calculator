@@ -11,7 +11,7 @@ const Themes = () => {
 
   const handlePress = (theme: string) => {
     setTheme && setTheme(theme);
-    router.push("/");
+    router.push("/main/mainScreen");
   };
   return (
     <SafeAreaView className="bg-[#505060] flex-1">
@@ -19,7 +19,7 @@ const Themes = () => {
         <TouchableOpacity
           className="justify-center rounded-full size-8 "
           onPress={() => {
-            router.push("/");
+            router.push("/main/mainScreen");
           }}
         >
           <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />

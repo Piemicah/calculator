@@ -14,7 +14,7 @@ const FormulaLayout = () => {
         <Stack.Screen name="maths" />
         <Stack.Screen name="physics" />
         <Stack.Screen name="chemistry" />
-        <Stack.Screen name="index" />
+        <Stack.Screen name="formulaHome" />
       </Stack>
     </>
   );
