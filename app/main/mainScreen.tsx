@@ -9,6 +9,7 @@ import { Colors } from "@/constants/Colors";
 import { useTheme } from "@/hooks/themeContext";
 import useOrientation from "@/hooks/useOrientation";
 import { keys } from "@/util/keypads";
+import { getItem, setItem } from "@/util/storage";
 import { Ionicons } from "@expo/vector-icons";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { all, create } from "mathjs";
@@ -21,9 +22,9 @@ export default function MainScreen() {
   const { isLandscape } = useOrientation();
   const [shiftPressed, setShiftPressed] = useState<boolean>(false);
   const [alphaPressed, setAlphaPressed] = useState<boolean>(false);
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [displayExpression, setDisplayExpression] = useState<string>("");
-  const [internalExpression, setInternalExpression] = useState<string>("");
+  const [stoPressed, setStoPressed] = useState<boolean>(false);
+  const [rclPressed, setRclPressed] = useState<boolean>(false);
+
   const [answer, setAnswer] = useState<string>("0");
   const [ansMemory, setAnsMemory] = useState<string>("0");
   const [degrees, setDegrees] = useState<boolean>(true);
@@ -36,6 +37,39 @@ export default function MainScreen() {
   const optionTxtColor = `text-${theme}-bigButton`;
 
   const math = create(all);
+
+  const polar = (x: number, y: number): string => {
+    const radius = math.sqrt(x * x + y * y) as number;
+    const arg = math.atan(y / x);
+    return `${radius.toFixed(4)}∠${arg.toFixed(4)}`;
+  };
+
+  const rec = (r: number, arg: number): string => {
+    const x = r * math.cos(arg);
+    const y = r * math.sin(arg);
+    return `x=${x.toFixed(4)},y=${y.toFixed(4)}`;
+  };
+
+  math.import({
+    integrate: (
+      expr: string,
+      variable: string,
+      a: number,
+      b: number,
+      n = 1000
+    ) => {
+      const h = (b - a) / n;
+      let sum = 0;
+      for (let i = 0; i <= n; i++) {
+        const x = a + i * h;
+        const fx = math.evaluate(expr, { [variable]: x });
+        sum += (i === 0 || i === n ? 1 : i % 2 === 0 ? 2 : 4) * fx;
+      }
+      return (h / 3) * sum; // Simpson’s rule
+    },
+    polar,
+    rec,
+  });
 
   // override with degree-based versions
   if (degrees) {
@@ -62,12 +96,7 @@ export default function MainScreen() {
     );
   }
 
-  const handleModal = () => {
-    navigation.dispatch(DrawerActions.openDrawer());
-    //setModalVisible(!modalVisible);
-  };
-
-  const specialBtns = ["DEL", "AC", "=", "◀", "▶"];
+  const specialBtns = ["DEL", "AC", "=", "◀", "▶", "ENG", "STO", "RCL"];
 
   const latexToExpression = (latex: string): string => {
     const expression = latex
@@ -88,20 +117,32 @@ export default function MainScreen() {
       .replace(/\\tan\^\(-1\)\(([\S]+)\)/g, "atan($1)")
       .replace(/\\tan/g, "tan")
       .replace(/\\frac\(([\S]+)\)\(([\S]+)\)/g, "(($1)/($2))")
+      .replace(/([\S]+)P([\S]+)/g, "(permutations($1,$2))")
+      .replace(/([\S]+)C([\S]+)/g, "(combinations($1,$2))")
+      .replace(
+        /\\int_([\d]+)\^([\d]+)([\S]+)d([a-zA-Z])/g,
+        "(integrate('$3','$4',$1,$2))"
+      )
+      .replace(/Pol\((\d+),(\d+)\)/g, "polar($1,$2)")
+      .replace(/Rec\((\d+),(\d+)\)/g, "rec($1,$2)")
       .replace(/Ans/g, `${ansMemory}`);
     return expression;
   };
-  const btnClicked = (key: string) => {
+  const btnClicked = async (key: string) => {
     const label = (
-      shiftPressed && keys[key].shift ? keys[key].shift : keys[key].value
+      shiftPressed && keys[key].shift
+        ? keys[key].shift
+        : (alphaPressed && keys[key].alpha) || (rclPressed && keys[key].alpha)
+          ? keys[key].alpha
+          : keys[key].value
     ) as string;
     console.log(label);
     try {
-      if (specialBtns.includes(key)) {
+      if (specialBtns.includes(label)) {
         switch (label) {
           case "AC":
             mathRef.current?.clear();
-            setAnswer("0");
+            setAnswer("");
             break;
           case "DEL":
             mathRef.current?.deleteLeft();
@@ -119,15 +160,37 @@ export default function MainScreen() {
           case "▶":
             if (key === "◀") mathRef.current?.moveLeft(1);
             else mathRef.current?.moveRight(1);
+
+          case "STO":
+            setStoPressed(true);
+            setRclPressed(false);
+            break;
+
+          case "RCL":
+            setRclPressed(true);
+            setStoPressed(false);
+            break;
         }
       } else {
         mathRef.current?.insert(label);
+        if (stoPressed && keys[key].alpha) {
+          const expr = latexToExpression(latex);
+          const ans = math.evaluate(expr);
+          setItem(keys[key].alpha, ans);
+        }
+        if (rclPressed && keys[key].alpha) {
+          const mm = await getItem(keys[key].alpha);
+          console.log(mm);
+          setAnswer(mm as string);
+        }
+        setRclPressed(false);
       }
     } catch (error: any) {
-      setAnswer("Asise isiro!");
+      setAnswer("Math Error!");
     } finally {
       setShiftPressed(false);
       setAlphaPressed(false);
+      // setRclPressed(false);
     }
   };
 
@@ -148,6 +211,16 @@ export default function MainScreen() {
           {alphaPressed && (
             <Text className={`${optionTxtColor}  text-[11px] font-bold`}>
               A
+            </Text>
+          )}
+          {stoPressed && (
+            <Text className={`${optionTxtColor}  text-[11px] font-bold`}>
+              STO
+            </Text>
+          )}
+          {rclPressed && (
+            <Text className={`${optionTxtColor}  text-[11px] font-bold`}>
+              RCL
             </Text>
           )}
           <Text className={`${optionTxtColor}  text-[11px] font-bold`}>
@@ -172,6 +245,9 @@ export default function MainScreen() {
 
         <DisplayScreen>
           <MathQuillEditor ref={mathRef} initialLatex="" onChange={setLatex} />
+          {/* <View className="flex flex-1 mb-2 bg-red-500">
+            <MathQuillEditor initialLatex={answer} onChange={() => {}} />
+          </View> */}
           <Text className="text-[18px] text-right">{answer}</Text>
         </DisplayScreen>
       </View>
@@ -190,7 +266,11 @@ export default function MainScreen() {
                 setAlphaPressed(false);
               }}
             />
-            <TouchableOpacity onPress={handleModal}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.dispatch(DrawerActions.openDrawer());
+              }}
+            >
               <Ionicons
                 name="options-outline"
                 size={32}
@@ -212,7 +292,7 @@ export default function MainScreen() {
           <View className={`flex-col ${isLandscape ? "gap-0" : "gap-2"}`}>
             <View className="flex-row justify-between w-full">
               <SmallButton label="CALC" cap1="SOLVE" mid="=" />
-              <SmallButton label="∫dx" cap1="d/dx" mid=":" />
+              <SmallButton label="∫dx" cap1="d/dx" mid=":" fxn={btnClicked} />
               <SmallButton label="◀" cap1=" " fxn={btnClicked} />
               <SmallButton label="▶" cap1=" " fxn={btnClicked} />
               <SmallButton label="x¯¹" cap1="x!" mid="LOGIC" fxn={btnClicked} />
@@ -235,11 +315,11 @@ export default function MainScreen() {
               <SmallButton label="tan" cap1="tan¯¹" mid="F" fxn={btnClicked} />
             </View>
             <View className="flex-row justify-between w-full">
-              <SmallButton label="RCL" cap1="STO" />
+              <SmallButton label="RCL" cap1="STO" fxn={btnClicked} />
               <SmallButton
-                label="i"
+                label="ENG"
                 cap1="&#x27F5;"
-                cap2="j"
+                cap2="i"
                 fxn={btnClicked}
               />
               <SmallButton label="(" cap1="[" fxn={btnClicked} />
@@ -258,7 +338,7 @@ export default function MainScreen() {
             <BigButton label="8" cap2="G" fxn={btnClicked} />
             <BigButton label="9" cap2="T" fxn={btnClicked} />
             <BigButton label="DEL" mid="INS" fxn={btnClicked} />
-            <BigButton label="AC" mid="OFF" fxn={btnClicked} />
+            <BigButton label="AC" mid="CLR ALL" fxn={btnClicked} />
           </View>
           <View className="flex-row justify-between w-full">
             <BigButton label="4" cap1="[MAT]" cap2="µ" fxn={btnClicked} />
