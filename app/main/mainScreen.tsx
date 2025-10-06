@@ -6,10 +6,10 @@ import MathQuillEditor, {
 import NormalButton from "@/components/NormalButton";
 import SmallButton from "@/components/SmallButton";
 import { Colors } from "@/constants/Colors";
+import { useMemory } from "@/hooks/memoryContext";
 import { useTheme } from "@/hooks/themeContext";
 import useOrientation from "@/hooks/useOrientation";
 import { keys } from "@/util/keypads";
-import { getItem, setItem } from "@/util/storage";
 import { Ionicons } from "@expo/vector-icons";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { all, create } from "mathjs";
@@ -19,6 +19,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MainScreen() {
   const { theme, setTheme } = useTheme();
+  const { memory, setMemory } = useMemory();
   const { isLandscape } = useOrientation();
   const [shiftPressed, setShiftPressed] = useState<boolean>(false);
   const [alphaPressed, setAlphaPressed] = useState<boolean>(false);
@@ -125,6 +126,15 @@ export default function MainScreen() {
       )
       .replace(/Pol\((\d+),(\d+)\)/g, "polar($1,$2)")
       .replace(/Rec\((\d+),(\d+)\)/g, "rec($1,$2)")
+      .replace(/a/g, `(${memory.a})`)
+      .replace(/b/g, `(${memory.b})`)
+      .replace(/c/g, `(${memory.c})`)
+      .replace(/d/g, `(${memory.d})`)
+      .replace(/e/g, `(${memory.e})`)
+      .replace(/f/g, `(${memory.f})`)
+      .replace(/x/g, `(${memory.x})`)
+      .replace(/y/g, `(${memory.y})`)
+      .replace(/M/g, `(${memory.M})`)
       .replace(/Ans/g, `${ansMemory}`);
     return expression;
   };
@@ -160,6 +170,7 @@ export default function MainScreen() {
           case "▶":
             if (key === "◀") mathRef.current?.moveLeft(1);
             else mathRef.current?.moveRight(1);
+            break;
 
           case "STO":
             setStoPressed(true);
@@ -172,18 +183,20 @@ export default function MainScreen() {
             break;
         }
       } else {
-        mathRef.current?.insert(label);
         if (stoPressed && keys[key].alpha) {
           const expr = latexToExpression(latex);
           const ans = math.evaluate(expr);
-          setItem(keys[key].alpha, ans);
+          setMemory && setMemory({ ...memory, [keys[key].alpha]: ans });
+          setAnswer(`${ans}-->${keys[key].alpha}`);
         }
         if (rclPressed && keys[key].alpha) {
-          const mm = await getItem(keys[key].alpha);
-          console.log(mm);
-          setAnswer(mm as string);
+          const mm = memory[keys[key].alpha];
+          setAnswer(mm);
+          mathRef.current?.insert(label);
         }
+        mathRef.current?.insert(label);
         setRclPressed(false);
+        setStoPressed(false);
       }
     } catch (error: any) {
       setAnswer("Math Error!");
@@ -307,12 +320,12 @@ export default function MainScreen() {
               <SmallButton label="ln" cap1="eˣ" mid="OCT" fxn={btnClicked} />
             </View>
             <View className="flex-row justify-between w-full">
-              <SmallButton label="( - )" cap1="[∠]" mid="A" />
-              <SmallButton label="° ' ' '" cap1="&#x27F5;" mid="B" />
+              <SmallButton label="( - )" cap1="[∠]" mid="a" />
+              <SmallButton label="° ' ' '" cap1="&#x27F5;" mid="b" />
               <SmallButton label="hyp" mid="C" />
-              <SmallButton label="sin" cap1="sin¯¹" mid="D" fxn={btnClicked} />
-              <SmallButton label="cos" cap1="cos¯¹" mid="E" fxn={btnClicked} />
-              <SmallButton label="tan" cap1="tan¯¹" mid="F" fxn={btnClicked} />
+              <SmallButton label="sin" cap1="sin¯¹" mid="d" fxn={btnClicked} />
+              <SmallButton label="cos" cap1="cos¯¹" mid="e" fxn={btnClicked} />
+              <SmallButton label="tan" cap1="tan¯¹" mid="f" fxn={btnClicked} />
             </View>
             <View className="flex-row justify-between w-full">
               <SmallButton label="RCL" cap1="STO" fxn={btnClicked} />
@@ -323,8 +336,8 @@ export default function MainScreen() {
                 fxn={btnClicked}
               />
               <SmallButton label="(" cap1="[" fxn={btnClicked} />
-              <SmallButton label=")" cap1="]" mid="X" fxn={btnClicked} />
-              <SmallButton label="," cap1=";" mid="Y" fxn={btnClicked} />
+              <SmallButton label=")" cap1="]" mid="x" fxn={btnClicked} />
+              <SmallButton label="," cap1=";" mid="y" fxn={btnClicked} />
               <SmallButton label="M+" cap1="M-" mid="M" />
             </View>
           </View>

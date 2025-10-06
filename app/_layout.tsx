@@ -1,3 +1,4 @@
+import { MemoryProvider } from "@/hooks/memoryContext";
 import { ThemeProvider } from "@/hooks/themeContext";
 import { Stack } from "expo-router";
 import Drawer from "expo-router/drawer";
@@ -16,20 +17,22 @@ const OptionDrawer = () => {
 export default function RootLayout() {
   return (
     <ThemeProvider>
-      <SafeAreaProvider>
-        <StatusBar hidden={true} />
-        <Stack
-          initialRouteName="main"
-          screenOptions={{
-            headerShown: false,
-            navigationBarHidden: false,
-          }}
-        >
-          <Stack.Screen name="themes" />
-          <Stack.Screen name="formulas" />
-          <Stack.Screen name="main" />
-        </Stack>
-      </SafeAreaProvider>
+      <MemoryProvider>
+        <SafeAreaProvider>
+          <StatusBar hidden={true} />
+          <Stack
+            initialRouteName="main"
+            screenOptions={{
+              headerShown: false,
+              navigationBarHidden: false,
+            }}
+          >
+            <Stack.Screen name="themes" />
+            <Stack.Screen name="formulas" />
+            <Stack.Screen name="main" />
+          </Stack>
+        </SafeAreaProvider>
+      </MemoryProvider>
     </ThemeProvider>
   );
 }

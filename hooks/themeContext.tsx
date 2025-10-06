@@ -16,7 +16,7 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const getTheme = async () => {
       const value = await getItem("theme");
-      setTheme(value);
+      setTheme(value ?? "default");
     };
 
     getTheme();
