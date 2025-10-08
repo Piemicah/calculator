@@ -97,7 +97,17 @@ export default function MainScreen() {
     );
   }
 
-  const specialBtns = ["DEL", "AC", "=", "◀", "▶", "ENG", "STO", "RCL"];
+  const specialBtns = [
+    "DEL",
+    "AC",
+    "=",
+    "◀",
+    "▶",
+    "ENG",
+    "STO",
+    "RCL",
+    "CONS",
+  ];
 
   const latexToExpression = (latex: string): string => {
     const expression = latex
@@ -126,14 +136,15 @@ export default function MainScreen() {
       )
       .replace(/Pol\((\d+),(\d+)\)/g, "polar($1,$2)")
       .replace(/Rec\((\d+),(\d+)\)/g, "rec($1,$2)")
-      .replace(/a/g, `(${memory.a})`)
-      .replace(/b/g, `(${memory.b})`)
-      .replace(/c/g, `(${memory.c})`)
-      .replace(/d/g, `(${memory.d})`)
-      .replace(/e/g, `(${memory.e})`)
-      .replace(/f/g, `(${memory.f})`)
-      .replace(/x/g, `(${memory.x})`)
-      .replace(/y/g, `(${memory.y})`)
+
+      .replace(/A/g, `(${memory.A})`)
+      .replace(/B/g, `(${memory.B})`)
+      .replace(/C/g, `(${memory.C})`)
+      .replace(/D/g, `(${memory.D})`)
+      .replace(/E/g, `(${memory.E})`)
+      .replace(/F/g, `(${memory.F})`)
+      .replace(/X/g, `(${memory.X})`)
+      .replace(/Y/g, `(${memory.Y})`)
       .replace(/M/g, `(${memory.M})`)
       .replace(/Ans/g, `${ansMemory}`);
     return expression;
@@ -181,6 +192,9 @@ export default function MainScreen() {
             setRclPressed(true);
             setStoPressed(false);
             break;
+
+          case "CONS":
+            break;
         }
       } else {
         if (stoPressed && keys[key].alpha) {
@@ -188,18 +202,18 @@ export default function MainScreen() {
           const ans = math.evaluate(expr);
           setMemory && setMemory({ ...memory, [keys[key].alpha]: ans });
           setAnswer(`${ans}-->${keys[key].alpha}`);
-        }
-        if (rclPressed && keys[key].alpha) {
-          const mm = memory[keys[key].alpha];
+        } else if (rclPressed && keys[key].alpha) {
+          const mm = memory[keys[key].alpha as keyof typeof memory];
           setAnswer(mm);
+
           mathRef.current?.insert(label);
-        }
-        mathRef.current?.insert(label);
+        } else mathRef.current?.insert(label);
         setRclPressed(false);
         setStoPressed(false);
       }
     } catch (error: any) {
       setAnswer("Math Error!");
+      console.log(error);
     } finally {
       setShiftPressed(false);
       setAlphaPressed(false);
@@ -212,7 +226,7 @@ export default function MainScreen() {
 
   return (
     <SafeAreaView
-      className={`flex-1 justify-between items-center ${bgColor} ${isLandscape ? "pt-0 px-3" : "pt-10 px-2"}`}
+      className={`flex-1 justify-between items-center ${bgColor} ${isLandscape ? "pt-0 px-3" : "pt-10 px-2"} relative`}
     >
       <View className="w-full">
         <View className="flex-row justify-start w-full gap-4 pl-2 mb-1">
@@ -309,7 +323,7 @@ export default function MainScreen() {
               <SmallButton label="◀" cap1=" " fxn={btnClicked} />
               <SmallButton label="▶" cap1=" " fxn={btnClicked} />
               <SmallButton label="x¯¹" cap1="x!" mid="LOGIC" fxn={btnClicked} />
-              <SmallButton label="CONS" cap2="CONV" />
+              <SmallButton label="CONS" cap2="CONV" fxn={btnClicked} />
             </View>
             <View className="flex-row justify-between w-full">
               <SmallButton label="a b/c" cap1="d/c" fxn={btnClicked} />
@@ -320,12 +334,12 @@ export default function MainScreen() {
               <SmallButton label="ln" cap1="eˣ" mid="OCT" fxn={btnClicked} />
             </View>
             <View className="flex-row justify-between w-full">
-              <SmallButton label="( - )" cap1="[∠]" mid="a" />
-              <SmallButton label="° ' ' '" cap1="&#x27F5;" mid="b" />
+              <SmallButton label="( - )" cap1="[∠]" mid="A" />
+              <SmallButton label="° ' ' '" cap1="&#x27F5;" mid="B" />
               <SmallButton label="hyp" mid="C" />
-              <SmallButton label="sin" cap1="sin¯¹" mid="d" fxn={btnClicked} />
-              <SmallButton label="cos" cap1="cos¯¹" mid="e" fxn={btnClicked} />
-              <SmallButton label="tan" cap1="tan¯¹" mid="f" fxn={btnClicked} />
+              <SmallButton label="sin" cap1="sin¯¹" mid="D" fxn={btnClicked} />
+              <SmallButton label="cos" cap1="cos¯¹" mid="E" fxn={btnClicked} />
+              <SmallButton label="tan" cap1="tan¯¹" mid="F" fxn={btnClicked} />
             </View>
             <View className="flex-row justify-between w-full">
               <SmallButton label="RCL" cap1="STO" fxn={btnClicked} />
@@ -336,9 +350,9 @@ export default function MainScreen() {
                 fxn={btnClicked}
               />
               <SmallButton label="(" cap1="[" fxn={btnClicked} />
-              <SmallButton label=")" cap1="]" mid="x" fxn={btnClicked} />
-              <SmallButton label="," cap1=";" mid="y" fxn={btnClicked} />
-              <SmallButton label="M+" cap1="M-" mid="M" />
+              <SmallButton label=")" cap1="]" mid="X" fxn={btnClicked} />
+              <SmallButton label="," cap1=";" mid="Y" fxn={btnClicked} />
+              <SmallButton label="M+" cap1="M-" mid="M" fxn={btnClicked} />
             </View>
           </View>
         </View>
