@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/hooks/themeContext";
 import { Stack } from "expo-router";
 import Drawer from "expo-router/drawer";
 import { StatusBar } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "./global.css";
 
@@ -18,20 +19,22 @@ export default function RootLayout() {
   return (
     <ThemeProvider>
       <MemoryProvider>
-        <SafeAreaProvider>
-          <StatusBar hidden={true} />
-          <Stack
-            initialRouteName="main"
-            screenOptions={{
-              headerShown: false,
-              navigationBarHidden: false,
-            }}
-          >
-            <Stack.Screen name="themes" />
-            <Stack.Screen name="formulas" />
-            <Stack.Screen name="main" />
-          </Stack>
-        </SafeAreaProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <SafeAreaProvider>
+            <StatusBar hidden={true} />
+            <Stack
+              initialRouteName="main"
+              screenOptions={{
+                headerShown: false,
+                navigationBarHidden: false,
+              }}
+            >
+              <Stack.Screen name="themes" />
+              <Stack.Screen name="formulas" />
+              <Stack.Screen name="main" />
+            </Stack>
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
       </MemoryProvider>
     </ThemeProvider>
   );

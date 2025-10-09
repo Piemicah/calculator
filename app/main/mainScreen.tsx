@@ -1,4 +1,8 @@
 import BigButton from "@/components/BigButton";
+import BottomSheetList, {
+  BottomSheetListRef,
+} from "@/components/BottomSheetList";
+
 import DisplayScreen from "@/components/DisplayScreen";
 import MathQuillEditor, {
   MathQuillEditorRef,
@@ -9,6 +13,7 @@ import { Colors } from "@/constants/Colors";
 import { useMemory } from "@/hooks/memoryContext";
 import { useTheme } from "@/hooks/themeContext";
 import useOrientation from "@/hooks/useOrientation";
+import { conversions, scientificConstants } from "@/util/data";
 import { keys } from "@/util/keypads";
 import { Ionicons } from "@expo/vector-icons";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
@@ -31,6 +36,9 @@ export default function MainScreen() {
   const [degrees, setDegrees] = useState<boolean>(true);
   const [latex, setLatex] = useState<string>("");
   const mathRef = useRef<MathQuillEditorRef>(null);
+
+  const constantSheetRef = useRef<BottomSheetListRef>(null);
+  const conversionSheetRef = useRef<BottomSheetListRef>(null);
 
   const navigation = useNavigation();
 
@@ -107,6 +115,7 @@ export default function MainScreen() {
     "STO",
     "RCL",
     "CONS",
+    "CONV",
   ];
 
   const latexToExpression = (latex: string): string => {
@@ -194,6 +203,10 @@ export default function MainScreen() {
             break;
 
           case "CONS":
+            constantSheetRef.current?.open();
+            break;
+          case "CONV":
+            conversionSheetRef.current?.open();
             break;
         }
       } else {
@@ -221,6 +234,10 @@ export default function MainScreen() {
     }
   };
 
+  const constantItemPressed = (item: any) => {
+    const value = item.value;
+    mathRef.current?.insert(value);
+  };
   console.log({ expr: latexToExpression(latex) });
   console.log({ latex });
 
@@ -390,6 +407,21 @@ export default function MainScreen() {
           </View>
         </View>
       </View>
+      <BottomSheetList
+        data={scientificConstants}
+        title="Constants"
+        ref={constantSheetRef}
+        onPress={constantItemPressed}
+        isConstants={true}
+      />
+
+      <BottomSheetList
+        data={conversions}
+        title="Metric Coversion"
+        ref={conversionSheetRef}
+        onPress={constantItemPressed}
+        isConstants={false}
+      />
     </SafeAreaView>
   );
 }

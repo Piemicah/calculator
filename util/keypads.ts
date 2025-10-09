@@ -43,5 +43,5 @@ export const keys: KeyType = {
   "∫dx": { value: "\\int_{}^{}d" },
   RCL: { value: "RCL", shift: "STO" },
   "M+": { value: "M+", shift: "M-", alpha: "M" },
-  CONS: { value: "CONS" },
+  CONS: { value: "CONS", shift: "CONV" },
 };
