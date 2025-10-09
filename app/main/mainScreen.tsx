@@ -146,18 +146,115 @@ export default function MainScreen() {
       .replace(/Pol\((\d+),(\d+)\)/g, "polar($1,$2)")
       .replace(/Rec\((\d+),(\d+)\)/g, "rec($1,$2)")
 
-      .replace(/A/g, `(${memory.A})`)
-      .replace(/B/g, `(${memory.B})`)
-      .replace(/C/g, `(${memory.C})`)
-      .replace(/D/g, `(${memory.D})`)
-      .replace(/E/g, `(${memory.E})`)
-      .replace(/F/g, `(${memory.F})`)
-      .replace(/X/g, `(${memory.X})`)
-      .replace(/Y/g, `(${memory.Y})`)
-      .replace(/M/g, `(${memory.M})`)
-      .replace(/Ans/g, `${ansMemory}`);
+      // ✅ Replace "Ans" first before single-letter memory keys
+      .replace(/\bAns\b/g, `${ansMemory}`)
+
+      // ✅ Use word boundaries (\b) for isolated letters
+      .replace(/\bA\b/g, `(${memory.A})`)
+      .replace(/\bB\b/g, `(${memory.B})`)
+      .replace(/\bC\b/g, `(${memory.C})`)
+      .replace(/\bD\b/g, `(${memory.D})`)
+      .replace(/\bE\b/g, `(${memory.E})`)
+      .replace(/\bF\b/g, `(${memory.F})`)
+      .replace(/\bX\b/g, `(${memory.X})`)
+      .replace(/\bY\b/g, `(${memory.Y})`)
+      .replace(/\bM\b/g, `(${memory.M})`)
+      .replace(/in►cm/g, "(2.54)")
+      .replace(/cm►in/g, "(0.3937007874)")
+      .replace(/ft►m/g, "(0.3048)")
+      .replace(/m►ft/g, "(3.280839895)")
+      .replace(/yd►m/g, "(0.9144)")
+      .replace(/m►yd/g, "(1.0936132983)")
+      .replace(/mi►km/g, "(1.609344)")
+      .replace(/km►mi/g, "(0.6213711922)")
+      .replace(/mm►in/g, "(0.0393700787)")
+      .replace(/in►mm/g, "(25.4)")
+      .replace(/cm►m/g, "(0.01)")
+      .replace(/m►cm/g, "(100)")
+      .replace(/km►m/g, "(1000)")
+      .replace(/m►km/g, "(0.001)")
+
+      // 🟩 AREA
+      .replace(/m²►ft²/g, "(10.7639104167)")
+      .replace(/ft²►m²/g, "(0.09290304)")
+      .replace(/cm²►in²/g, "(0.15500031)")
+      .replace(/in²►cm²/g, "(6.4516)")
+      .replace(/km²►mi²/g, "(0.3861021585)")
+      .replace(/mi²►km²/g, "(2.5899881103)")
+      .replace(/acre►m²/g, "(4046.8564224)")
+      .replace(/m²►acre/g, "(0.0002471054)")
+      .replace(/hectare►m²/g, "(10000)")
+      .replace(/m²►hectare/g, "(0.0001)")
+
+      // 🟨 VOLUME
+      .replace(/L►mL/g, "(1000)")
+      .replace(/mL►L/g, "(0.001)")
+      .replace(/L►gal\(US\)/g, "(0.2641720524)")
+      .replace(/gal\(US\)►L/g, "(3.785411784)")
+      .replace(/L►qt\(US\)/g, "(1.05668821)")
+      .replace(/qt\(US\)►L/g, "(0.946352946)")
+      .replace(/L►fl oz\(US\)/g, "(33.8140227)")
+      .replace(/fl oz\(US\)►L/g, "(0.0295735296)")
+      .replace(/m³►L/g, "(1000)")
+      .replace(/L►m³/g, "(0.001)")
+
+      // 🟥 MASS / WEIGHT
+      .replace(/kg►g/g, "(1000)")
+      .replace(/g►kg/g, "(0.001)")
+      .replace(/kg►lb/g, "(2.2046226218)")
+      .replace(/lb►kg/g, "(0.45359237)")
+      .replace(/g►oz/g, "(0.0352739619)")
+      .replace(/oz►g/g, "(28.349523125)")
+      .replace(/ton\(US\)►kg/g, "(907.18474)")
+      .replace(/kg►ton\(US\)/g, "(0.0011023113)")
+      .replace(/tonne►kg/g, "(1000)")
+      .replace(/kg►tonne/g, "(0.001)")
+
+      // 🟧 SPEED
+      .replace(/m\/s►km\/h/g, "(3.6)")
+      .replace(/km\/h►m\/s/g, "(0.277777778)")
+      .replace(/m\/s►mph/g, "(2.23693629)")
+      .replace(/mph►m\/s/g, "(0.44704)")
+      .replace(/km\/h►mph/g, "(0.6213711922)")
+      .replace(/mph►km\/h/g, "(1.609344)")
+
+      // 🟪 PRESSURE
+      .replace(/Pa►kPa/g, "(0.001)")
+      .replace(/kPa►Pa/g, "(1000)")
+      .replace(/kPa►bar/g, "(0.01)")
+      .replace(/bar►kPa/g, "(100)")
+      .replace(/bar►psi/g, "(14.5037738)")
+      .replace(/psi►bar/g, "(0.0689475729)")
+      .replace(/atm►kPa/g, "(101.325)")
+      .replace(/kPa►atm/g, "(0.0098692327)")
+
+      // 🟫 ENERGY
+      .replace(/J►kJ/g, "(0.001)")
+      .replace(/kJ►J/g, "(1000)")
+      .replace(/J►cal/g, "(0.2390057361)")
+      .replace(/cal►J/g, "(4.184)")
+      .replace(/kcal►kJ/g, "(4.184)")
+      .replace(/kJ►kcal/g, "(0.2390057361)")
+      .replace(/Wh►J/g, "(3600)")
+      .replace(/J►Wh/g, "(0.0002777778)")
+      .replace(/kWh►MJ/g, "(3.6)")
+      .replace(/MJ►kWh/g, "(0.277777778)")
+
+      // 🟦 DATA STORAGE
+      .replace(/bit►byte/g, "(0.125)")
+      .replace(/byte►bit/g, "(8)")
+      .replace(/KB►byte/g, "(1024)")
+      .replace(/byte►KB/g, "(0.0009765625)")
+      .replace(/MB►KB/g, "(1024)")
+      .replace(/KB►MB/g, "(0.0009765625)")
+      .replace(/GB►MB/g, "(1024)")
+      .replace(/MB►GB/g, "(0.0009765625)")
+      .replace(/TB►GB/g, "(1024)")
+      .replace(/GB►TB/g, "(0.0009765625)");
+
     return expression;
   };
+
   const btnClicked = async (key: string) => {
     const label = (
       shiftPressed && keys[key].shift
@@ -238,6 +335,11 @@ export default function MainScreen() {
     const value = item.value;
     mathRef.current?.insert(value);
   };
+
+  const conversionItemPressed = (item: any) => {
+    const value = item.label;
+    mathRef.current?.insert(value);
+  };
   console.log({ expr: latexToExpression(latex) });
   console.log({ latex });
 
@@ -310,6 +412,13 @@ export default function MainScreen() {
                 setAlphaPressed(false);
               }}
             />
+            <SmallButton
+              label="Alpha"
+              fxn={() => {
+                setAlphaPressed(!alphaPressed);
+                setShiftPressed(false);
+              }}
+            />
             <TouchableOpacity
               onPress={() => {
                 navigation.dispatch(DrawerActions.openDrawer());
@@ -324,13 +433,6 @@ export default function MainScreen() {
 
             <NormalButton label="" />
             <NormalButton label="" />
-            <SmallButton
-              label="Alpha"
-              fxn={() => {
-                setAlphaPressed(!alphaPressed);
-                setShiftPressed(false);
-              }}
-            />
           </View>
           {/* small buttons */}
           <View className={`flex-col ${isLandscape ? "gap-0" : "gap-2"}`}>
@@ -419,7 +521,7 @@ export default function MainScreen() {
         data={conversions}
         title="Metric Coversion"
         ref={conversionSheetRef}
-        onPress={constantItemPressed}
+        onPress={conversionItemPressed}
         isConstants={false}
       />
     </SafeAreaView>

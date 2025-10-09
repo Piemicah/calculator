@@ -36,7 +36,7 @@ const MathQuillEditor = forwardRef<MathQuillEditorRef, Props>(
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.css" />
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <style>
-          body { margin: 0; padding: 10px; height:50px; }
+          body { margin: 0; padding: 10px; height:60px; }
           #editor {
             border: none;
             font-size:${latexFontSize};
@@ -174,6 +174,6 @@ const MathQuillEditor = forwardRef<MathQuillEditorRef, Props>(
 export default MathQuillEditor;
 
 const styles = StyleSheet.create({
-  container: { height: 50, marginVertical: 10 },
+  container: { height: 60, marginVertical: 10 },
   webview: { flex: 1, backgroundColor: "transparent" },
 });

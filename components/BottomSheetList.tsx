@@ -121,7 +121,7 @@ const BottomSheetList = forwardRef<BottomSheetListRef, ListType>(
               </TouchableOpacity>
             ) : (
               <TouchableOpacity>
-                <Text className="text-white">MORE</Text>
+                <Text className="text-[#d465f0]">MORE</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -147,22 +147,30 @@ const BottomSheetList = forwardRef<BottomSheetListRef, ListType>(
                     <Text className="text-white">{item.symbol}</Text>
                   </TouchableOpacity>
                 ) : (
-                  <TouchableOpacity className="flex-row bg-red-400 ">
-                    <Text className="text-[#e1e1e1]">{index + 1}: </Text>
-                    <Text className="text-white">{item.label}</Text>
+                  <TouchableOpacity
+                    className="flex-row "
+                    onPress={() => {
+                      onPress(item);
+                      ref && (ref as any).current?.close();
+                    }}
+                  >
+                    <View className="flex-row">
+                      <Text className="text-[#e1e1e1]">{index + 1}: </Text>
+                      <Text className="text-white">{item.label}</Text>
+                    </View>
                   </TouchableOpacity>
                 )}
               </View>
             )}
             ItemSeparatorComponent={() => (
-              <View className="w-full h-[1px] bg-white"></View>
+              <View className="w-full h-[1px] bg-[#707070ad]"></View>
             )}
             columnWrapperStyle={
               !isConstants
                 ? {
                     justifyContent: "space-between",
-                    marginBottom: 10,
-                    paddingHorizontal: 4,
+                    marginVertical: 10,
+                    paddingHorizontal: 20,
                   }
                 : undefined
             }
