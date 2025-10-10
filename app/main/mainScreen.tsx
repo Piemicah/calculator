@@ -30,6 +30,7 @@ export default function MainScreen() {
   const [alphaPressed, setAlphaPressed] = useState<boolean>(false);
   const [stoPressed, setStoPressed] = useState<boolean>(false);
   const [rclPressed, setRclPressed] = useState<boolean>(false);
+  const [hypPressed, setHypPressed] = useState<boolean>(false);
 
   const [answer, setAnswer] = useState<string>("0");
   const [ansMemory, setAnsMemory] = useState<string>("0");
@@ -116,7 +117,11 @@ export default function MainScreen() {
     "RCL",
     "CONS",
     "CONV",
+    "hyp",
   ];
+
+  const trigFunctions = ["\\sin()", "\\cos()", "\\tan()"];
+  const inverseTrigFunctions = ["\\sin^{-1}()", "\\cos^{-1}()", "\\tan^{-1}()"];
 
   const latexToExpression = (latex: string): string => {
     const expression = latex
@@ -131,10 +136,13 @@ export default function MainScreen() {
       .replace(/\\sqrt\[(\d+)\]\((\d+)\)/g, "$2^(1/$1)")
       .replace(/\\sqrt/g, "sqrt")
       .replace(/\\sin\^\(-1\)\(([\S]+)\)/g, "asin($1)")
+      .replace(/\\sinh\^\(-1\)\(([\S]+)\)/g, "asinh($1)")
       .replace(/\\sin/g, "sin")
       .replace(/\\cos\^\(-1\)\(([\S]+)\)/g, "acos($1)")
+      .replace(/\\cosh\^\(-1\)\(([\S]+)\)/g, "acosh($1)")
       .replace(/\\cos/g, "cos")
       .replace(/\\tan\^\(-1\)\(([\S]+)\)/g, "atan($1)")
+      .replace(/\\tanh\^\(-1\)\(([\S]+)\)/g, "atanh($1)")
       .replace(/\\tan/g, "tan")
       .replace(/\\frac\(([\S]+)\)\(([\S]+)\)/g, "(($1)/($2))")
       .replace(/([\S]+)P([\S]+)/g, "(permutations($1,$2))")
@@ -159,6 +167,7 @@ export default function MainScreen() {
       .replace(/\bX\b/g, `(${memory.X})`)
       .replace(/\bY\b/g, `(${memory.Y})`)
       .replace(/\bM\b/g, `(${memory.M})`)
+      .replace(/\\%/g, "%")
       .replace(/in►cm/g, "(2.54)")
       .replace(/cm►in/g, "(0.3937007874)")
       .replace(/ft►m/g, "(0.3048)")
@@ -305,6 +314,9 @@ export default function MainScreen() {
           case "CONV":
             conversionSheetRef.current?.open();
             break;
+          case "hyp":
+            setHypPressed(!hypPressed);
+            break;
         }
       } else {
         if (stoPressed && keys[key].alpha) {
@@ -317,9 +329,24 @@ export default function MainScreen() {
           setAnswer(mm);
 
           mathRef.current?.insert(label);
+        } else if (hypPressed && trigFunctions.includes(label)) {
+          let trig = "";
+          if (label === "\\sin()") trig = "\\sinh()";
+          if (label === "\\cos()") trig = "\\cosh()";
+          if (label === "\\tan()") trig = "\\tanh()";
+
+          mathRef.current?.insert(trig);
+        } else if (hypPressed && inverseTrigFunctions.includes(label)) {
+          let trig = "";
+          if (label === "\\sin^{-1}()") trig = "\\sinh^{-1}()";
+          if (label === "\\cos^{-1}()") trig = "\\cosh^{-1}()";
+          if (label === "\\tan^{-1}()") trig = "\\tanh^{-1}()";
+
+          mathRef.current?.insert(trig);
         } else mathRef.current?.insert(label);
         setRclPressed(false);
         setStoPressed(false);
+        setHypPressed(false);
       }
     } catch (error: any) {
       setAnswer("Math Error!");
@@ -357,6 +384,11 @@ export default function MainScreen() {
           {alphaPressed && (
             <Text className={`${optionTxtColor}  text-[11px] font-bold`}>
               A
+            </Text>
+          )}
+          {hypPressed && (
+            <Text className={`${optionTxtColor}  text-[11px] font-bold`}>
+              H
             </Text>
           )}
           {stoPressed && (
@@ -455,7 +487,7 @@ export default function MainScreen() {
             <View className="flex-row justify-between w-full">
               <SmallButton label="( - )" cap1="[∠]" mid="A" />
               <SmallButton label="° ' ' '" cap1="&#x27F5;" mid="B" />
-              <SmallButton label="hyp" mid="C" />
+              <SmallButton label="hyp" mid="C" fxn={btnClicked} />
               <SmallButton label="sin" cap1="sin¯¹" mid="D" fxn={btnClicked} />
               <SmallButton label="cos" cap1="cos¯¹" mid="E" fxn={btnClicked} />
               <SmallButton label="tan" cap1="tan¯¹" mid="F" fxn={btnClicked} />
