@@ -41,7 +41,9 @@ const Menu = (props: any) => {
       {/* Unit Conversion */}
       <TouchableOpacity
         className="flex-row items-center py-[4] my-[2] pl-[4] border-b border-b-[#404040] gap-2 "
-        onPress={() => {}}
+        onPress={() => {
+          router.push("/converter/converterList");
+        }}
       >
         <FontAwesome name="balance-scale" size={iconSize} color={itemColor} />
         <Text className="text-white text-[16px]">Unit Conversion</Text>

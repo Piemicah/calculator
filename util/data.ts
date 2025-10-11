@@ -322,3 +322,251 @@ export const conversions = [
   { label: "TB►GB", value: "1024" },
   { label: "GB►TB", value: "0.0009765625" },
 ];
+
+export const conversionRates = [
+  // Dimension
+  {
+    heading: "Dimension",
+    data: [
+      { title: "Length", subtitle: "Mile,Meter,Foot", img: images.length },
+      {
+        title: "Area",
+        subtitle: "Hectare,square Meter,square Foot",
+        img: images.area,
+      },
+      {
+        title: "Volume",
+        subtitle: "Barrel,Liter,Fluid Ounce",
+        img: images.volume,
+      },
+    ],
+  },
+
+  // Useful
+  {
+    heading: "Useful",
+    data: [
+      {
+        title: "Currency",
+        subtitle: "US Dollar,Euro,British Pound",
+        img: images.currency,
+      },
+      {
+        title: "Fuel Comsumption",
+        subtitle: "Litres per 100km,Liters per 100 Miles",
+        img: images.fuel,
+      },
+      { title: "Time", subtitle: "Day,Hour,Minute,Second", img: images.clock },
+    ],
+  },
+
+  // Mechanics
+  {
+    heading: "Mechanics",
+    data: [
+      {
+        title: "Pressure",
+        subtitle: "Atmosphere,Bar,Pascal",
+        img: images.pressure,
+      },
+      {
+        title: "Weight",
+        subtitle: "Kilogram,Pounds,Ounce",
+        img: images.weight,
+      },
+      {
+        title: "Force",
+        subtitle: "Newton,Kilogram-force,Pound-force",
+        img: images.force,
+      },
+      {
+        title: "Torque",
+        subtitle: "Newton Meter,Meter-Kilogram Force",
+        img: images.torque,
+      },
+    ],
+  },
+
+  // Motion
+  {
+    heading: "Motion",
+    data: [
+      {
+        title: "Speed",
+        subtitle: "Miles per hour, Kilometer per hour",
+        img: images.speed,
+      },
+      {
+        title: "Acceleration",
+        subtitle: "Meter per hour per second,gravity",
+        img: images.acceleration,
+      },
+      {
+        title: "Angular speed",
+        subtitle: "Revolution per hour, radian per hour",
+        img: images.angular_speed,
+      },
+      {
+        title: "Flow rate",
+        subtitle: "Liters per minute, Gallons per minute",
+        img: images.flow_rate,
+      },
+      {
+        title: "Frequency",
+        subtitle: "Hertz, MegaHertz, GigaHertz",
+        img: images.frequency,
+      },
+    ],
+  },
+
+  // chemistry
+  {
+    heading: "Chemistry",
+    data: [
+      {
+        title: "Density",
+        subtitle: "Kilogram per liter, Ounce per gallon",
+        img: images.density,
+      },
+      {
+        title: "Dynamic viscosity",
+        subtitle: "Pascal second, Poise",
+        img: images.viscosity,
+      },
+      {
+        title: "Kinematic viscosity",
+        subtitle: "Square meter per second",
+        img: images.viscosity,
+      },
+    ],
+  },
+
+  // Computing
+  {
+    heading: "Computing",
+    data: [
+      {
+        title: "Data storage",
+        subtitle: "Bit,Byte,Kilobyte,Megabyte",
+        img: images.database,
+      },
+      {
+        title: "Data transfer",
+        subtitle: "Kilobyte per second, Megabyte per second",
+        img: images.data_transfer,
+      },
+    ],
+  },
+
+  // Energy
+  {
+    heading: "Energy",
+    data: [
+      {
+        title: "Energy",
+        subtitle: "Joule, Calorie, BTU",
+        img: images.energy,
+      },
+      {
+        title: "Power",
+        subtitle: "Kilowatt, Horsepower, Calories per second",
+        img: images.power,
+      },
+      {
+        title: "Temperature",
+        subtitle: "Celcius, Fahrenheit, Kelvin",
+        img: images.temperature,
+      },
+    ],
+  },
+
+  // Energy
+  {
+    heading: "Electricity",
+    data: [
+      {
+        title: "Electric charge",
+        subtitle: "Coulomb, Ampere-hour, Faraday",
+        img: images.electric_charge,
+      },
+      {
+        title: "Electric current",
+        subtitle: "Ampere, Milliampere, Microampere",
+        img: images.electric_current,
+      },
+      {
+        title: "Electrical resistance",
+        subtitle: "Ohm, Volt per ampere",
+        img: images.electric_resistance,
+      },
+      {
+        title: "Electric capacitance",
+        subtitle: "Farad, MilliFarad",
+        img: images.electric_resistance,
+      },
+    ],
+  },
+
+  // Photometry
+  {
+    heading: "Photometry",
+    data: [
+      {
+        title: "Luminance",
+        subtitle: "Candela per square meter, Lambert",
+        img: images.luminance,
+      },
+      {
+        title: "Illuminance",
+        subtitle: "Lumen per square meter, Lux, Phot",
+        img: images.luminance,
+      },
+    ],
+  },
+
+  // Radioactivity
+  {
+    heading: "Radioactivity",
+    data: [
+      {
+        title: "Radiation",
+        subtitle: "Gray, Rad, Sievert",
+        img: images.radiation,
+      },
+      {
+        title: "Radioactivity",
+        subtitle: "Becquerel, Curie, Rutherford",
+        img: images.radiatioactivity,
+      },
+    ],
+  },
+
+  // Magnetism
+  {
+    heading: "Magnetism",
+    data: [
+      {
+        title: "Magnetic field",
+        subtitle: "Tesla, Gamma, Gauss",
+        img: images.magnet,
+      },
+    ],
+  },
+
+  // Mathematics
+  {
+    heading: "Mathematics",
+    data: [
+      {
+        title: "Angle",
+        subtitle: "Degree, Radian",
+        img: images.angle,
+      },
+      {
+        title: "Astronomy",
+        subtitle: "Astronomical unit, Light Year",
+        img: images.astronomy,
+      },
+    ],
+  },
+];

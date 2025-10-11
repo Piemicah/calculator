@@ -6,6 +6,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        defaultBg: "#202020",
         default: {
           display: "#D9D9D9",
           panel: "#111111",
