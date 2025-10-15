@@ -1,4 +1,5 @@
 export const Colors = {
+  defaultBg: "#202020",
   default: {
     display: "#D9D9D9",
     panel: "#111111",

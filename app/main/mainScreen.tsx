@@ -459,7 +459,16 @@ export default function MainScreen() {
               <Ionicons
                 name="options-outline"
                 size={32}
-                color={`${Colors[theme as keyof typeof Colors].bigButton}`}
+                color={
+                  typeof Colors[theme as keyof typeof Colors] === "object" &&
+                  Colors[theme as keyof typeof Colors] !== null
+                    ? (
+                        Colors[theme as keyof typeof Colors] as {
+                          bigButton: string;
+                        }
+                      ).bigButton
+                    : "#000"
+                }
               />
             </TouchableOpacity>
 

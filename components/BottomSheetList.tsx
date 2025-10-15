@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 import {
   Dimensions,
@@ -120,7 +121,11 @@ const BottomSheetList = forwardRef<BottomSheetListRef, ListType>(
                 <Ionicons name="close-circle-outline" size={30} color="#fff" />
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  router.push("/converter/converterList");
+                }}
+              >
                 <Text className="text-[#d465f0]">MORE</Text>
               </TouchableOpacity>
             )}

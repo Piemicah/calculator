@@ -22,6 +22,7 @@ import database from "../assets/images/icons/database.png";
 import density from "../assets/images/icons/density.png";
 import electric_current from "../assets/images/icons/electric-current.png";
 import energy from "../assets/images/icons/energy.png";
+import exchange from "../assets/images/icons/exchange.png";
 import flow_rate from "../assets/images/icons/flow_rate.png";
 import force from "../assets/images/icons/force.png";
 import frequency from "../assets/images/icons/frequency.png";
@@ -53,6 +54,7 @@ export default {
   straight_motion,
   pendulum,
   projectile,
+  exchange,
 
   // dimension
   length,

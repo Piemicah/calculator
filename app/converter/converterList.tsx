@@ -23,7 +23,12 @@ const ConverterList = () => {
         sections={conversionRates}
         keyExtractor={(item, index) => item.title + index}
         renderItem={({ item }) => (
-          <TouchableOpacity className="py-2 pl-5 my-1 bg-[#464646] flex-row items-center gap-4">
+          <TouchableOpacity
+            className="py-2 pl-5 my-1 bg-[#464646] flex-row items-center gap-4"
+            onPress={() => {
+              router.push("/converter/converterScreen");
+            }}
+          >
             <Image
               source={
                 typeof item.img === "string" ? { uri: item.img } : item.img

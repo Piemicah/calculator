@@ -4,7 +4,15 @@ import { ButtonType } from "@/types/buttonType";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-const SmallButton = ({ label, cap1, cap2, mid, fxn }: ButtonType) => {
+const SmallButton = ({
+  label,
+  cap1,
+  cap2,
+  mid,
+  fxn,
+  width = 50,
+  height = 28,
+}: ButtonType) => {
   const { theme } = useTheme();
   const { isLandscape } = useOrientation();
   const specialButtons = ["Shift", "Alpha"];
@@ -33,13 +41,15 @@ const SmallButton = ({ label, cap1, cap2, mid, fxn }: ButtonType) => {
         {cap2 && <Text className={`text-[12px] ${shiftColor}`}>{cap2}</Text>}
       </View>
       <View
-        className={`w-[50px] h-[28px] rounded-tl-[4px] rounded-tr-[4px] rounded-bl-[10px] rounded-br-[10px]`}
+        style={{ width: width, height: height }}
+        className={`rounded-tl-[4px] rounded-tr-[4px] rounded-bl-[10px] rounded-br-[10px]`}
       >
         <TouchableOpacity
           onPress={() => {
             fxn && fxn(label);
           }}
-          className={`justify-center items-center w-[49px] h-[27px] rounded-[4px] border-t shadow-black border-l border-l-${theme}-hilite border-t-${theme}-hilite ${bgColor}`}
+          style={{ width: width - 1, height: height - 1 }}
+          className={`justify-center items-center rounded-[4px] border-t shadow-black border-l border-l-${theme}-hilite border-t-${theme}-hilite ${bgColor}`}
         >
           <Text className={`${txtColor}`}>{label}</Text>
         </TouchableOpacity>

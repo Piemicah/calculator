@@ -502,7 +502,7 @@ export const conversionRates = [
       {
         title: "Electric capacitance",
         subtitle: "Farad, MilliFarad",
-        img: images.electric_resistance,
+        img: images.electric_capacitance,
       },
     ],
   },

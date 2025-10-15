@@ -4,4 +4,6 @@ export type ButtonType = {
   cap2?: string;
   mid?: string;
   fxn?: (label: string) => void;
+  width?: number;
+  height?: number;
 };
