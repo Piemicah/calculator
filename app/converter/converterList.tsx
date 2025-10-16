@@ -5,6 +5,10 @@ import React from "react";
 import { Image, SectionList, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+export type ConverterListRef = {
+  getTitle: () => string;
+};
+
 const ConverterList = () => {
   return (
     <SafeAreaView className="flex-1 bg-defaultBg">
@@ -26,7 +30,10 @@ const ConverterList = () => {
           <TouchableOpacity
             className="py-2 pl-5 my-1 bg-[#464646] flex-row items-center gap-4"
             onPress={() => {
-              router.push("/converter/converterScreen");
+              router.push({
+                pathname: "/converter/converterScreen",
+                params: { title: item.title },
+              });
             }}
           >
             <Image

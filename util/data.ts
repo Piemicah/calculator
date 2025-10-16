@@ -570,3 +570,17 @@ export const conversionRates = [
     ],
   },
 ];
+
+export const conversionFactors = [
+  {
+    title: "Length",
+    data: [
+      { name: "Kilometer", notation: "km", rate: 1000 },
+      { name: "Hectometer", notation: "Hm", rate: 100 },
+      { name: "Decameter", notation: "dam", rate: 10 },
+      { name: "Meter", notation: "m", rate: 1 },
+      { name: "Decimeter", notation: "dm", rate: 0.1 },
+      { name: "Centimeter", notation: "cm", rate: 0.01 },
+    ],
+  },
+];

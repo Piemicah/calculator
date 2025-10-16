@@ -1,15 +1,25 @@
 import BigButton from "@/components/BigButton";
 import DisplayScreen from "@/components/DisplayScreen";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const ConverterScreen = () => {
+  const { title } = useLocalSearchParams<{ title: string }>();
+  console.log(title);
+
+  const btnClicked = () => {
+    if (!title) return;
+    router.push({
+      pathname: "/converter/[title]",
+      params: { title },
+    });
+  };
   return (
-    <SafeAreaView className="flex-1 bg-default-panel px-1">
-      <View className="bg-[#2e2e2e] w-full h-14 justify-center">
+    <SafeAreaView className="flex-1 px-1 bg-default-panel">
+      <View className="bg-[#2e2e2e] w-full h-14  flex-row items-center">
         <TouchableOpacity
           className="justify-center rounded-full size-8 "
           onPress={() => {
@@ -18,9 +28,11 @@ const ConverterScreen = () => {
         >
           <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
         </TouchableOpacity>
+
+        <Text className="text-white">{title}</Text>
       </View>
-      <View className="flex-row justify-between items-center">
-        <BigButton label="left" width={160} height={40} />
+      <View className="flex-row items-center justify-between">
+        <BigButton label="left" width={160} height={40} fxn={btnClicked} />
         <TouchableOpacity>
           <Image
             source={require("../../assets/images/icons/exchange.png")}
