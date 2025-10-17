@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import React from "react";
 import { FlatList, Text, TouchableOpacity } from "react-native";
 
@@ -8,6 +9,7 @@ type RateType = {
     notation: string;
     rate: number;
   }[];
+  onPress: (item: any) => void;
 };
 
 const ConversionRateList = (data: RateType) => {
@@ -16,7 +18,16 @@ const ConversionRateList = (data: RateType) => {
       data={data.data}
       keyExtractor={(item) => item.notation}
       renderItem={({ item }) => (
-        <TouchableOpacity className="flex-row items-center justify-between px-3 py-2 border-b border-b-[#707070ad]">
+        <TouchableOpacity
+          className="flex-row items-center justify-between px-3 py-2 border-b border-b-[#707070ad]"
+          onPress={() => {
+            router.push({
+              pathname: "/converter/converterScreen",
+              params: { title: data.title },
+            });
+            data.onPress(item);
+          }}
+        >
           <Text className="text-white">{item.name}</Text>
           <Text className="text-white">({item.notation})</Text>
         </TouchableOpacity>

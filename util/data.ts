@@ -572,15 +572,332 @@ export const conversionRates = [
 ];
 
 export const conversionFactors = [
+  // ---------- LENGTH ----------
   {
     title: "Length",
     data: [
       { name: "Kilometer", notation: "km", rate: 1000 },
-      { name: "Hectometer", notation: "Hm", rate: 100 },
+      { name: "Hectometer", notation: "hm", rate: 100 },
       { name: "Decameter", notation: "dam", rate: 10 },
       { name: "Meter", notation: "m", rate: 1 },
       { name: "Decimeter", notation: "dm", rate: 0.1 },
       { name: "Centimeter", notation: "cm", rate: 0.01 },
+      { name: "Millimeter", notation: "mm", rate: 0.001 },
+      { name: "Micrometer", notation: "µm", rate: 1e-6 },
+      { name: "Nanometer", notation: "nm", rate: 1e-9 },
+    ],
+  },
+
+  // ---------- AREA ----------
+  {
+    title: "Area",
+    data: [
+      { name: "Square Kilometer", notation: "km²", rate: 1e6 },
+      { name: "Square Meter", notation: "m²", rate: 1 },
+      { name: "Square Centimeter", notation: "cm²", rate: 1e-4 },
+      { name: "Square Millimeter", notation: "mm²", rate: 1e-6 },
+      { name: "Hectare", notation: "ha", rate: 10000 },
+    ],
+  },
+
+  // ---------- VOLUME ----------
+  {
+    title: "Volume",
+    data: [
+      { name: "Cubic Meter", notation: "m³", rate: 1 },
+      { name: "Cubic Centimeter", notation: "cm³", rate: 1e-6 },
+      { name: "Cubic Millimeter", notation: "mm³", rate: 1e-9 },
+      { name: "Liter", notation: "L", rate: 0.001 },
+      { name: "Milliliter", notation: "mL", rate: 1e-6 },
+    ],
+  },
+
+  // ---------- TIME ----------
+  {
+    title: "Time",
+    data: [
+      { name: "Day", notation: "d", rate: 86400 },
+      { name: "Hour", notation: "h", rate: 3600 },
+      { name: "Minute", notation: "min", rate: 60 },
+      { name: "Second", notation: "s", rate: 1 },
+      { name: "Millisecond", notation: "ms", rate: 1e-3 },
+      { name: "Microsecond", notation: "µs", rate: 1e-6 },
+      { name: "Nanosecond", notation: "ns", rate: 1e-9 },
+    ],
+  },
+
+  // ---------- PRESSURE ----------
+  {
+    title: "Pressure",
+    data: [
+      { name: "Pascal", notation: "Pa", rate: 1 },
+      { name: "Kilopascal", notation: "kPa", rate: 1000 },
+      { name: "Bar", notation: "bar", rate: 1e5 },
+      { name: "Atmosphere", notation: "atm", rate: 101325 },
+      { name: "Torr", notation: "torr", rate: 133.322 },
+      { name: "PSI", notation: "psi", rate: 6894.76 },
+    ],
+  },
+
+  // ---------- WEIGHT (MASS) ----------
+  {
+    title: "Weight",
+    data: [
+      { name: "Tonne", notation: "t", rate: 1000 },
+      { name: "Kilogram", notation: "kg", rate: 1 },
+      { name: "Gram", notation: "g", rate: 0.001 },
+      { name: "Milligram", notation: "mg", rate: 1e-6 },
+      { name: "Microgram", notation: "µg", rate: 1e-9 },
+      { name: "Pound", notation: "lb", rate: 0.45359237 },
+      { name: "Ounce", notation: "oz", rate: 0.0283495 },
+    ],
+  },
+
+  // ---------- FORCE ----------
+  {
+    title: "Force",
+    data: [
+      { name: "Newton", notation: "N", rate: 1 },
+      { name: "Kilonewton", notation: "kN", rate: 1000 },
+      { name: "Dyne", notation: "dyn", rate: 1e-5 },
+      { name: "Pound-force", notation: "lbf", rate: 4.44822 },
+    ],
+  },
+
+  // ---------- TORQUE ----------
+  {
+    title: "Torque",
+    data: [
+      { name: "Newton meter", notation: "N·m", rate: 1 },
+      { name: "Kilonewton meter", notation: "kN·m", rate: 1000 },
+      { name: "Pound-foot", notation: "lb·ft", rate: 1.35582 },
+      { name: "Pound-inch", notation: "lb·in", rate: 0.112985 },
+    ],
+  },
+
+  // ---------- SPEED ----------
+  {
+    title: "Speed",
+    data: [
+      { name: "Meter per second", notation: "m/s", rate: 1 },
+      { name: "Kilometer per hour", notation: "km/h", rate: 0.277778 },
+      { name: "Mile per hour", notation: "mph", rate: 0.44704 },
+      { name: "Knot", notation: "kn", rate: 0.514444 },
+    ],
+  },
+
+  // ---------- ACCELERATION ----------
+  {
+    title: "Acceleration",
+    data: [
+      { name: "Meter per second squared", notation: "m/s²", rate: 1 },
+      { name: "Gal", notation: "Gal", rate: 0.01 },
+      { name: "Foot per second squared", notation: "ft/s²", rate: 0.3048 },
+    ],
+  },
+
+  // ---------- ANGULAR SPEED ----------
+  {
+    title: "Angular speed",
+    data: [
+      { name: "Radian per second", notation: "rad/s", rate: 1 },
+      { name: "Degree per second", notation: "°/s", rate: Math.PI / 180 },
+      {
+        name: "Revolution per minute",
+        notation: "rpm",
+        rate: (2 * Math.PI) / 60,
+      },
+    ],
+  },
+
+  // ---------- FLOW RATE ----------
+  {
+    title: "Flow Rate",
+    data: [
+      { name: "Cubic meter per second", notation: "m³/s", rate: 1 },
+      { name: "Liter per second", notation: "L/s", rate: 0.001 },
+      { name: "Liter per minute", notation: "L/min", rate: 0.001 / 60 },
+      { name: "Gallon per minute", notation: "GPM", rate: 0.00378541 / 60 },
+    ],
+  },
+
+  // ---------- FREQUENCY ----------
+  {
+    title: "Frequency",
+    data: [
+      { name: "Hertz", notation: "Hz", rate: 1 },
+      { name: "Kilohertz", notation: "kHz", rate: 1000 },
+      { name: "Megahertz", notation: "MHz", rate: 1e6 },
+      { name: "Gigahertz", notation: "GHz", rate: 1e9 },
+    ],
+  },
+
+  // ---------- DENSITY ----------
+  {
+    title: "Density",
+    data: [
+      { name: "Kilogram per cubic meter", notation: "kg/m³", rate: 1 },
+      { name: "Gram per cubic centimeter", notation: "g/cm³", rate: 1000 },
+      { name: "Gram per liter", notation: "g/L", rate: 1 },
+      { name: "Pound per cubic foot", notation: "lb/ft³", rate: 16.0185 },
+      { name: "Pound per cubic inch", notation: "lb/in³", rate: 27679.9 },
+    ],
+  },
+
+  // ---------- ENERGY ----------
+  {
+    title: "Energy",
+    data: [
+      { name: "Joule", notation: "J", rate: 1 },
+      { name: "Kilojoule", notation: "kJ", rate: 1000 },
+      { name: "Calorie", notation: "cal", rate: 4.184 },
+      { name: "Kilocalorie", notation: "kcal", rate: 4184 },
+      { name: "Watt-hour", notation: "Wh", rate: 3600 },
+      { name: "Kilowatt-hour", notation: "kWh", rate: 3.6e6 },
+      { name: "Electronvolt", notation: "eV", rate: 1.602176634e-19 },
+      { name: "British thermal unit", notation: "BTU", rate: 1055.06 },
+    ],
+  },
+
+  // ---------- POWER ----------
+  {
+    title: "Power",
+    data: [
+      { name: "Watt", notation: "W", rate: 1 },
+      { name: "Kilowatt", notation: "kW", rate: 1000 },
+      { name: "Megawatt", notation: "MW", rate: 1e6 },
+      { name: "Horsepower", notation: "hp", rate: 745.7 },
+      { name: "BTU per hour", notation: "BTU/h", rate: 0.293071 },
+    ],
+  },
+
+  // ---------- TEMPERATURE ----------
+  // {
+  //   title: "Temperature",
+  //   data: [
+  //     {
+  //       name: "Celsius",
+  //       notation: "°C",
+  //       toBase: (v: number) => v + 273.15,
+  //       fromBase: (v: number) => v - 273.15,
+  //     },
+  //     {
+  //       name: "Kelvin",
+  //       notation: "K",
+  //       toBase: (v: number) => v,
+  //       fromBase: (v: number) => v,
+  //     },
+  //     {
+  //       name: "Fahrenheit",
+  //       notation: "°F",
+  //       toBase: (v: number) => ((v - 32) * 5) / 9 + 273.15,
+  //       fromBase: (v: number) => ((v - 273.15) * 9) / 5 + 32,
+  //     },
+  //     {
+  //       name: "Rankine",
+  //       notation: "°R",
+  //       toBase: (v: number) => (v * 5) / 9,
+  //       fromBase: (v: number) => (v * 9) / 5,
+  //     },
+  //   ],
+  // },
+
+  // ---------- ANGLE ----------
+  {
+    title: "Angle",
+    data: [
+      { name: "Radian", notation: "rad", rate: 1 },
+      { name: "Degree", notation: "°", rate: Math.PI / 180 },
+      { name: "Gradian", notation: "gon", rate: Math.PI / 200 },
+      { name: "Arcminute", notation: "′", rate: Math.PI / 10800 },
+      { name: "Arcsecond", notation: "″", rate: Math.PI / 648000 },
+    ],
+  },
+
+  // ---------- LUMINANCE ----------
+  {
+    title: "Luminance",
+    data: [
+      { name: "Candela per square meter", notation: "cd/m²", rate: 1 },
+      { name: "Nit", notation: "nit", rate: 1 },
+      { name: "Foot-lambert", notation: "fL", rate: 3.4262591 },
+    ],
+  },
+
+  // ---------- ILLUMINANCE ----------
+  {
+    title: "Illuminance",
+    data: [
+      { name: "Lux", notation: "lx", rate: 1 },
+      { name: "Phot", notation: "ph", rate: 10000 },
+      { name: "Foot-candle", notation: "fc", rate: 10.7639 },
+    ],
+  },
+
+  // ---------- RADIATION ----------
+  {
+    title: "Radiation",
+    data: [
+      { name: "Gray", notation: "Gy", rate: 1 },
+      { name: "Rad", notation: "rad", rate: 0.01 },
+      { name: "Sievert", notation: "Sv", rate: 1 },
+      { name: "Rem", notation: "rem", rate: 0.01 },
+    ],
+  },
+
+  // ---------- RADIOACTIVITY ----------
+  {
+    title: "Radioactivity",
+    data: [
+      { name: "Becquerel", notation: "Bq", rate: 1 },
+      { name: "Curie", notation: "Ci", rate: 3.7e10 },
+      { name: "Rutherford", notation: "Rd", rate: 1e6 },
+    ],
+  },
+
+  // ---------- MAGNETIC FIELD ----------
+  {
+    title: "Magnetic field",
+    data: [
+      { name: "Tesla", notation: "T", rate: 1 },
+      { name: "Gauss", notation: "G", rate: 1e-4 },
+    ],
+  },
+
+  // ---------- ASTRONOMICAL DISTANCE ----------
+  {
+    title: "Astronomical distance",
+    data: [
+      { name: "Meter", notation: "m", rate: 1 },
+      { name: "Astronomical Unit", notation: "AU", rate: 1.495978707e11 },
+      { name: "Light Year", notation: "ly", rate: 9.4607e15 },
+      { name: "Parsec", notation: "pc", rate: 3.0857e16 },
+    ],
+  },
+
+  // ---------- DATA STORAGE ----------
+  {
+    title: "Data storage",
+    data: [
+      { name: "Bit", notation: "b", rate: 1 },
+      { name: "Byte", notation: "B", rate: 8 },
+      { name: "Kilobyte", notation: "KB", rate: 8 * 1024 },
+      { name: "Megabyte", notation: "MB", rate: 8 * 1024 ** 2 },
+      { name: "Gigabyte", notation: "GB", rate: 8 * 1024 ** 3 },
+      { name: "Terabyte", notation: "TB", rate: 8 * 1024 ** 4 },
+    ],
+  },
+
+  // ---------- DATA TRANSFER RATE ----------
+  {
+    title: "Data transfer",
+    data: [
+      { name: "Bit per second", notation: "bps", rate: 1 },
+      { name: "Kilobit per second", notation: "Kbps", rate: 1e3 },
+      { name: "Megabit per second", notation: "Mbps", rate: 1e6 },
+      { name: "Gigabit per second", notation: "Gbps", rate: 1e9 },
+      { name: "Byte per second", notation: "Bps", rate: 8 },
+      { name: "Megabyte per second", notation: "MBps", rate: 8e6 },
     ],
   },
 ];
