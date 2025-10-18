@@ -1,4 +1,4 @@
-import BigButton from "@/components/BigButton";
+import ConverterButton from "@/components/ConverterButton";
 import DisplayScreen from "@/components/DisplayScreen";
 import MathQuillEditor, {
   MathQuillEditorRef,
@@ -13,6 +13,8 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type UnitProps = { name: string; notation: string; rate: number };
+const WIDTH = 74;
+const HEIGHT = 40;
 
 const ConverterScreen = () => {
   const { title } = useLocalSearchParams<{ title: string }>();
@@ -74,7 +76,8 @@ const ConverterScreen = () => {
       .replace(/\\sqrt\[3\]/g, "cbrt")
       .replace(/\\sqrt\[(\d+)\]\((\d+)\)/g, "$2^(1/$1)")
       .replace(/\\sqrt/g, "sqrt")
-      .replace(/\\frac\(([\S]+)\)\(([\S]+)\)/g, "(($1)/($2))");
+      .replace(/\\frac\(([\S]+)\)\(([\S]+)\)/g, "(($1)/($2))")
+      .replace(/\\%/g, "%");
 
     return expression;
   };
@@ -127,6 +130,13 @@ const ConverterScreen = () => {
     }
   };
 
+  const switchButtonClicked = () => {
+    const temp = leftUnit;
+    setLeftUnit(rightUnit);
+    setRightUnit(temp);
+    convert();
+  };
+
   return (
     <SafeAreaView className="flex-1 px-1 bg-default-panel">
       <View className="bg-[#2e2e2e] w-full h-14  flex-row items-center">
@@ -141,23 +151,25 @@ const ConverterScreen = () => {
 
         <Text className="text-white">{title}</Text>
       </View>
-      <View className="flex-row items-center justify-between">
-        <BigButton
+      <View className="flex-row items-center justify-between my-2">
+        <ConverterButton
           label={leftUnit.name}
           width={160}
           height={40}
+          fontSize={18}
           fxn={leftBtnClicked}
         />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={switchButtonClicked}>
           <Image
             source={require("../../assets/images/icons/exchange.png")}
             className="size-8"
           />
         </TouchableOpacity>
-        <BigButton
+        <ConverterButton
           label={rightUnit.name}
           width={160}
           height={40}
+          fontSize={18}
           fxn={rightBtnClicked}
         />
       </View>
@@ -178,45 +190,55 @@ const ConverterScreen = () => {
           <Text className="text-xl">{rightUnit.notation}</Text>
         </View>
       </DisplayScreen>
-      <View className="flex-row justify-center">
-        <BigButton label="◀" cap1=" " fxn={btnClicked} />
-        <BigButton label="▶" cap1=" " fxn={btnClicked} />
-      </View>
-      <View className="flex-row justify-between w-full">
-        <BigButton label="a b/c" fxn={btnClicked} />
-        <BigButton label="√" fxn={btnClicked} />
-        <BigButton label="x²" fxn={btnClicked} />
-        <BigButton label="xⁿ" fxn={btnClicked} />
-        <BigButton label="log" fxn={btnClicked} />
-        <BigButton label="ln" fxn={btnClicked} />
-      </View>
-      <View className="flex-row justify-between w-full">
-        <BigButton label="7" fxn={btnClicked} />
-        <BigButton label="8" fxn={btnClicked} />
-        <BigButton label="9" fxn={btnClicked} />
-        <BigButton label="DEL" fxn={btnClicked} />
-        <BigButton label="AC" fxn={btnClicked} />
-      </View>
-      <View className="flex-row justify-between w-full">
-        <BigButton label="4" fxn={btnClicked} />
-        <BigButton label="5" fxn={btnClicked} />
-        <BigButton label="6" fxn={btnClicked} />
-        <BigButton label="×" fxn={btnClicked} />
-        <BigButton label="÷" fxn={btnClicked} />
-      </View>
-      <View className="flex-row justify-between w-full">
-        <BigButton label="1" fxn={btnClicked} />
-        <BigButton label="2" fxn={btnClicked} />
-        <BigButton label="3" fxn={btnClicked} />
-        <BigButton label="+" fxn={btnClicked} />
-        <BigButton label="-" fxn={btnClicked} />
-      </View>
-      <View className="flex-row justify-between w-full">
-        <BigButton label="0" fxn={btnClicked} />
-        <BigButton label="•" fxn={btnClicked} />
-        <BigButton label="EXP" fxn={btnClicked} />
-        <BigButton label="Ans" fxn={btnClicked} />
-        <BigButton label="=" fxn={btnClicked} />
+      <View className="mt-4 gap-4">
+        <View className="flex-row justify-between w-full">
+          <ConverterButton label="◀" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="▶" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="DEL" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="AC" fxn={btnClicked} width={WIDTH} />
+        </View>
+        <View className="flex-row justify-between w-full">
+          <ConverterButton label="a b/c" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="√" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="x²" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="xⁿ" fxn={btnClicked} width={WIDTH} />
+        </View>
+        <View className="flex-row justify-between w-full">
+          <ConverterButton label="x¯¹" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="(" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label=")" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="x!" fxn={btnClicked} width={WIDTH} />
+        </View>
+        <View className="flex-row justify-between w-full">
+          <ConverterButton label="7" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="8" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="9" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="×" fxn={btnClicked} width={WIDTH} />
+        </View>
+        <View className="flex-row justify-between w-full">
+          <ConverterButton label="4" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="5" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="6" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="÷" fxn={btnClicked} width={WIDTH} />
+        </View>
+        <View className="flex-row justify-between w-full">
+          <ConverterButton label="1" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="2" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="3" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="+" fxn={btnClicked} width={WIDTH} />
+        </View>
+        <View className="flex-row justify-between w-full">
+          <ConverterButton label="0" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="•" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="EXP" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="-" fxn={btnClicked} width={WIDTH} />
+        </View>
+        <View className="flex-row justify-between w-full">
+          <ConverterButton label="log" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="ln" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="%" fxn={btnClicked} width={WIDTH} />
+          <ConverterButton label="=" fxn={btnClicked} width={WIDTH} />
+        </View>
       </View>
     </SafeAreaView>
   );

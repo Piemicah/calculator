@@ -605,9 +605,12 @@ export const conversionFactors = [
     title: "Volume",
     data: [
       { name: "Cubic Meter", notation: "m³", rate: 1 },
+      { name: "Cubic Decimeter", notation: "dm³", rate: 1e-3 },
       { name: "Cubic Centimeter", notation: "cm³", rate: 1e-6 },
       { name: "Cubic Millimeter", notation: "mm³", rate: 1e-9 },
       { name: "Liter", notation: "L", rate: 0.001 },
+      { name: "Deciliter", notation: "dL", rate: 0.0001 },
+      { name: "Centiliter", notation: "cL", rate: 0.00001 },
       { name: "Milliliter", notation: "mL", rate: 1e-6 },
     ],
   },
@@ -866,9 +869,10 @@ export const conversionFactors = [
 
   // ---------- ASTRONOMICAL DISTANCE ----------
   {
-    title: "Astronomical distance",
+    title: "Astronomy",
     data: [
       { name: "Meter", notation: "m", rate: 1 },
+      { name: "Kilometer", notation: "km", rate: 1000 },
       { name: "Astronomical Unit", notation: "AU", rate: 1.495978707e11 },
       { name: "Light Year", notation: "ly", rate: 9.4607e15 },
       { name: "Parsec", notation: "pc", rate: 3.0857e16 },

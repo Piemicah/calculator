@@ -12,7 +12,7 @@ export type ConverterListRef = {
 const ConverterList = () => {
   return (
     <SafeAreaView className="flex-1 bg-defaultBg">
-      <View className="bg-[#2e2e2e] w-full h-14 justify-center">
+      <View className="bg-[#2e2e2e] w-full h-14 items-center gap-4 flex-row">
         <TouchableOpacity
           className="justify-center rounded-full size-8 "
           onPress={() => {
@@ -21,6 +21,7 @@ const ConverterList = () => {
         >
           <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
         </TouchableOpacity>
+        <Text className="text-white text-xl">Unit Converter</Text>
       </View>
 
       <SectionList

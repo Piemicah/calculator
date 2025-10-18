@@ -32,7 +32,7 @@ export default function MainScreen() {
   const [rclPressed, setRclPressed] = useState<boolean>(false);
   const [hypPressed, setHypPressed] = useState<boolean>(false);
 
-  const [answer, setAnswer] = useState<string>("0");
+  const [answer, setAnswer] = useState<string>("");
   const [ansMemory, setAnsMemory] = useState<string>("0");
   const [degrees, setDegrees] = useState<boolean>(true);
   const [latex, setLatex] = useState<string>("");
@@ -228,14 +228,14 @@ export default function MainScreen() {
       .replace(/mph►km\/h/g, "(1.609344)")
 
       // 🟪 PRESSURE
-      .replace(/Pa►kPa/g, "(0.001)")
       .replace(/kPa►Pa/g, "(1000)")
       .replace(/kPa►bar/g, "(0.01)")
+      .replace(/kPa►atm/g, "(0.0098692327)")
+      .replace(/Pa►kPa/g, "(0.001)")
       .replace(/bar►kPa/g, "(100)")
       .replace(/bar►psi/g, "(14.5037738)")
       .replace(/psi►bar/g, "(0.0689475729)")
       .replace(/atm►kPa/g, "(101.325)")
-      .replace(/kPa►atm/g, "(0.0098692327)")
 
       // 🟫 ENERGY
       .replace(/J►kJ/g, "(0.001)")
