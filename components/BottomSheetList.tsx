@@ -56,7 +56,7 @@ const BottomSheetList = forwardRef<BottomSheetListRef, ListType>(
       open: () => {
         setVisible(true);
         opacity.value = withTiming(1, { duration: 200 });
-        translateY.value = withSpring(SNAP_POINTS.HALF, { damping: 60 });
+        translateY.value = withSpring(SNAP_POINTS.HALF, { damping: 100 });
       },
       close: () => {
         opacity.value = withTiming(0, { duration: 150 });
