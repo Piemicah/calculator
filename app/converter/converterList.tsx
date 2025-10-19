@@ -1,4 +1,5 @@
-import { conversionRates } from "@/util/data";
+import { conversionFactors, conversionRates } from "@/util/data";
+import { setItem } from "@/util/storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
@@ -7,6 +8,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export type ConverterListRef = {
   getTitle: () => string;
+};
+
+const itemClicked = (item: any) => {
+  router.push({
+    pathname: "/converter/converterScreen",
+    params: { title: item.title },
+  });
+  const convList = conversionFactors.find((x) => x.title === item.title);
+  const data = convList?.data;
+  if (data && data.length > 0) {
+    setItem("leftUnit", data[0]);
+    setItem("rightUnit", data[0]);
+  }
 };
 
 const ConverterList = () => {
@@ -31,10 +45,7 @@ const ConverterList = () => {
           <TouchableOpacity
             className="py-2 pl-5 my-1 bg-[#464646] flex-row items-center gap-4"
             onPress={() => {
-              router.push({
-                pathname: "/converter/converterScreen",
-                params: { title: item.title },
-              });
+              itemClicked(item);
             }}
           >
             <Image

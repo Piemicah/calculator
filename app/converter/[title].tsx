@@ -13,7 +13,7 @@ const RateFactorsList = () => {
   const getItemDetail = async (item: any) => {
     if (side === "left") await setItem("leftUnit", item);
     else await setItem("rightUnit", item);
-    console.log(item);
+    // console.log(item);
   };
 
   console.log(side);
@@ -33,7 +33,10 @@ const RateFactorsList = () => {
         <Text className="text-white">{title}</Text>
       </View>
       <ConversionRateList
-        data={convList?.data ?? []}
+        data={(convList?.data ?? []).map((d) => ({
+          ...d,
+          rate: typeof d.rate === "string" ? parseFloat(d.rate) : d.rate,
+        }))}
         title={convList?.title ?? ""}
         onPress={getItemDetail}
       />

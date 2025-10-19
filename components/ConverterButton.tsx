@@ -1,4 +1,3 @@
-import { useTheme } from "@/hooks/themeContext";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
@@ -17,8 +16,6 @@ const ConverterButton = ({
   height = 34,
   fontSize = 20,
 }: ConverterProps) => {
-  const { theme } = useTheme();
-
   const bgColor =
     label === "AC" || label === "DEL"
       ? `bg-default-delacButton`

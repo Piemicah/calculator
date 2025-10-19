@@ -39,6 +39,7 @@ import speed from "../assets/images/icons/speed.png";
 import temperature from "../assets/images/icons/temperature.png";
 import clock from "../assets/images/icons/time.png";
 import torque from "../assets/images/icons/torque.png";
+import typography from "../assets/images/icons/typography.png";
 import viscosity from "../assets/images/icons/visocity.png";
 import electric_potential from "../assets/images/icons/voltage.png";
 import volume from "../assets/images/icons/volume.png";
@@ -112,4 +113,7 @@ export default {
   // Mathematics
   angle,
   astronomy,
+
+  // typograpy
+  typography,
 };

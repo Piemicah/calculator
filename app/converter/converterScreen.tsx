@@ -119,8 +119,67 @@ const ConverterScreen = () => {
     }
   };
 
+  const toKelvin = () => {
+    let value = 0;
+    const rate = leftUnit.rate;
+    const expr = latexToExpression(latex);
+    const temp = Number(math.evaluate(expr || "0"));
+    switch (leftUnit.notation) {
+      case "K":
+        value = temp;
+        break;
+      case "°F":
+        value = (5 * (temp - 32)) / 9 + 273.15;
+        break;
+      case "°C":
+        value = temp + 273.15;
+        break;
+      case "°R":
+        value = rate * temp;
+        break;
+      case "°N":
+        value = rate * temp + 273.15;
+        break;
+
+      default:
+        break;
+    }
+
+    return value;
+  };
+
+  const fromKelvin = (temp: number) => {
+    let value = 0;
+    switch (rightUnit.notation) {
+      case "K":
+        value = temp;
+        break;
+      case "°F":
+        value = (9 * (temp - 273.15)) / 5 + 32;
+        break;
+      case "°C":
+        value = temp - 273.15;
+        break;
+      case "°R":
+        value = (9 * temp) / 5;
+        break;
+      case "°N":
+        value = (33 * (temp - 273.15)) / 100;
+        break;
+      default:
+        break;
+    }
+    return value;
+  };
+
   const convert = () => {
     try {
+      if (title === "Temperature") {
+        const value = toKelvin();
+        const result = fromKelvin(value);
+        setAnswer(result.toString());
+        return;
+      }
       const factor = leftUnit.rate / rightUnit.rate;
       const expr = latexToExpression(latex);
       const evaluation = math.evaluate(expr || "0");
@@ -136,6 +195,9 @@ const ConverterScreen = () => {
     setRightUnit(temp);
     convert();
   };
+
+  console.log({ leftUnit });
+  console.log({ rightUnit });
 
   return (
     <SafeAreaView className="flex-1 px-1 bg-default-panel">
@@ -156,7 +218,7 @@ const ConverterScreen = () => {
           label={leftUnit.name}
           width={160}
           height={40}
-          fontSize={18}
+          fontSize={Math.floor(90 / leftUnit.name.length)}
           fxn={leftBtnClicked}
         />
         <TouchableOpacity onPress={switchButtonClicked}>
@@ -169,7 +231,7 @@ const ConverterScreen = () => {
           label={rightUnit.name}
           width={160}
           height={40}
-          fontSize={18}
+          fontSize={Math.floor(90 / rightUnit.name.length)}
           fxn={rightBtnClicked}
         />
       </View>
