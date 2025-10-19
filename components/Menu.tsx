@@ -46,7 +46,7 @@ const Menu = (props: any) => {
         }}
       >
         <FontAwesome name="balance-scale" size={iconSize} color={itemColor} />
-        <Text className="text-white text-[16px]">Unit Conversion</Text>
+        <Text className="text-white text-[16px]">Unit Converter</Text>
       </TouchableOpacity>
 
       {/* Themes */}
