@@ -4,6 +4,7 @@ import BottomSheetList, {
 } from "@/components/BottomSheetList";
 
 import DisplayScreen from "@/components/DisplayScreen";
+import Hyperbolic, { HypeItemProps } from "@/components/Hyperbolic";
 import MathQuillEditor, {
   MathQuillEditorRef,
 } from "@/components/MathQuillEditor";
@@ -120,9 +121,6 @@ export default function MainScreen() {
     "hyp",
   ];
 
-  const trigFunctions = ["\\sin()", "\\cos()", "\\tan()"];
-  const inverseTrigFunctions = ["\\sin^{-1}()", "\\cos^{-1}()", "\\tan^{-1}()"];
-
   const latexToExpression = (latex: string): string => {
     const expression = latex
       .replace(/{/g, "(")
@@ -141,9 +139,13 @@ export default function MainScreen() {
       .replace(/\\cos\^\(-1\)\(([\S]+)\)/g, "acos($1)")
       .replace(/\\cosh\^\(-1\)\(([\S]+)\)/g, "acosh($1)")
       .replace(/\\cos/g, "cos")
+      .replace(/\\cosh/g, "cosh")
       .replace(/\\tan\^\(-1\)\(([\S]+)\)/g, "atan($1)")
       .replace(/\\tanh\^\(-1\)\(([\S]+)\)/g, "atanh($1)")
       .replace(/\\tan/g, "tan")
+      .replace(/\\coth/g, "coth")
+      .replace(/\\operatorname\(sech\)/g, "sech")
+      .replace(/\\operatorname\(csch\)/g, "csch")
       .replace(/\\frac\(([\S]+)\)\(([\S]+)\)/g, "(($1)/($2))")
       .replace(/([\S]+)P([\S]+)/g, "(permutations($1,$2))")
       .replace(/([\S]+)C([\S]+)/g, "(combinations($1,$2))")
@@ -329,20 +331,6 @@ export default function MainScreen() {
           setAnswer(mm);
 
           mathRef.current?.insert(label);
-        } else if (hypPressed && trigFunctions.includes(label)) {
-          let trig = "";
-          if (label === "\\sin()") trig = "\\sinh()";
-          if (label === "\\cos()") trig = "\\cosh()";
-          if (label === "\\tan()") trig = "\\tanh()";
-
-          mathRef.current?.insert(trig);
-        } else if (hypPressed && inverseTrigFunctions.includes(label)) {
-          let trig = "";
-          if (label === "\\sin^{-1}()") trig = "\\sinh^{-1}()";
-          if (label === "\\cos^{-1}()") trig = "\\cosh^{-1}()";
-          if (label === "\\tan^{-1}()") trig = "\\tanh^{-1}()";
-
-          mathRef.current?.insert(trig);
         } else mathRef.current?.insert(label);
         setRclPressed(false);
         setStoPressed(false);
@@ -366,6 +354,10 @@ export default function MainScreen() {
   const conversionItemPressed = (item: any) => {
     const value = item.label;
     mathRef.current?.insert(value);
+  };
+
+  const getHypItem = (item: HypeItemProps) => {
+    mathRef.current?.insert(item.value);
   };
   console.log({ expr: latexToExpression(latex) });
   console.log({ latex });
@@ -472,7 +464,7 @@ export default function MainScreen() {
               />
             </TouchableOpacity>
 
-            <NormalButton label="" />
+            <NormalButton label="MODE" />
             <NormalButton label="" />
           </View>
           {/* small buttons */}
@@ -565,6 +557,10 @@ export default function MainScreen() {
         onPress={conversionItemPressed}
         isConstants={false}
       />
+
+      {hypPressed && (
+        <Hyperbolic setHypPressed={setHypPressed} getHypItem={getHypItem} />
+      )}
     </SafeAreaView>
   );
 }

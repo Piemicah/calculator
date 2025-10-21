@@ -196,9 +196,6 @@ const ConverterScreen = () => {
     convert();
   };
 
-  console.log({ leftUnit });
-  console.log({ rightUnit });
-
   return (
     <SafeAreaView className="flex-1 px-1 bg-default-panel">
       <View className="bg-[#2e2e2e] w-full h-14  flex-row items-center">
@@ -218,7 +215,13 @@ const ConverterScreen = () => {
           label={leftUnit.name}
           width={160}
           height={40}
-          fontSize={Math.floor(90 / leftUnit.name.length)}
+          fontSize={
+            leftUnit.name.length <= 8
+              ? 18
+              : leftUnit.name.length > 8 && leftUnit.name.length <= 20
+                ? 14
+                : 12
+          }
           fxn={leftBtnClicked}
         />
         <TouchableOpacity onPress={switchButtonClicked}>
@@ -231,7 +234,13 @@ const ConverterScreen = () => {
           label={rightUnit.name}
           width={160}
           height={40}
-          fontSize={Math.floor(90 / rightUnit.name.length)}
+          fontSize={
+            rightUnit.name.length <= 8
+              ? 18
+              : rightUnit.name.length > 8 && rightUnit.name.length <= 20
+                ? 14
+                : 12
+          }
           fxn={rightBtnClicked}
         />
       </View>
@@ -252,7 +261,7 @@ const ConverterScreen = () => {
           <Text className="text-xl">{rightUnit.notation}</Text>
         </View>
       </DisplayScreen>
-      <View className="mt-4 gap-4">
+      <View className="gap-4 mt-4">
         <View className="flex-row justify-between w-full">
           <ConverterButton label="◀" fxn={btnClicked} width={WIDTH} />
           <ConverterButton label="▶" fxn={btnClicked} width={WIDTH} />

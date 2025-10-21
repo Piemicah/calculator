@@ -636,9 +636,7 @@ export const conversionFactors = [
 
       // Agricultural / Survey Units
       { name: "Barn", notation: "b", rate: 1e-28 },
-      { name: "Hectare", notation: "ha", rate: 10000 },
-      { name: "Are", notation: "a", rate: 100 },
-      { name: "Decare", notation: "daa", rate: 1000 },
+
       { name: "Square chain", notation: "ch²", rate: 404.68564224 },
       { name: "Square rod (perch/pole)", notation: "rd²", rate: 25.29285264 },
 
@@ -654,7 +652,7 @@ export const conversionFactors = [
       // Miscellaneous / Specialized
       { name: "Circular mil", notation: "cmil", rate: 5.067075e-10 },
       { name: "Square mil", notation: "mil²", rate: 6.4516e-10 },
-      { name: "Square centimeter", notation: "cm²", rate: 1e-4 },
+
       { name: "Square angstrom", notation: "Å²", rate: 1e-20 },
       { name: "Square furlong", notation: "fur²", rate: 40468.564224 },
     ],
@@ -884,11 +882,8 @@ export const conversionFactors = [
       // Specialized / Scientific
       { name: "Megabar", notation: "Mbar", rate: 1e11 },
       { name: "Kilobar", notation: "kbar", rate: 1e8 },
-      { name: "Millibar", notation: "mbar", rate: 100 },
-      { name: "Microbar", notation: "µbar", rate: 0.1 },
       { name: "Gigabar", notation: "Gbar", rate: 1e14 },
-      { name: "Atmosphere (US std)", notation: "atm(US)", rate: 101325 },
-      { name: "Torr (exact)", notation: "Torr", rate: 133.3223684211 },
+
       { name: "Pascal second per meter", notation: "Pa·s/m", rate: 1 }, // for fluid systems
     ],
   },
@@ -2446,5 +2441,48 @@ export const conversionFactors = [
         rate: 1.488164e1,
       },
     ],
+  },
+];
+
+// Hyperbolic Functions
+export const hyperbolic = [
+  // Primary hyperbolic functions
+  { title: "Sinh(value)", subtitle: "Hyperbolic sine", value: "\\sinh()" },
+  { title: "Cosh(value)", subtitle: "Hyperbolic cosine", value: "\\cosh()" },
+  { title: "Tanh(value)", subtitle: "Hyperbolic tangent", value: "\\tanh()" },
+  { title: "Coth(value)", subtitle: "Hyperbolic cotangent", value: "\\coth()" },
+  { title: "Sech(value)", subtitle: "Hyperbolic secant", value: "\\sech()" },
+  { title: "Csch(value)", subtitle: "Hyperbolic cosecant", value: "\\csch()" },
+
+  // Inverse hyperbolic (area hyperbolic) functions
+  {
+    title: "Arcsinh(value)",
+    subtitle: "Inverse hyperbolic sine",
+    value: "\\sinh^{-1}()",
+  },
+  {
+    title: "Arccosh(value)",
+    subtitle: "Inverse hyperbolic cosine",
+    value: "\\cosh^{-1}()",
+  },
+  {
+    title: "Arctanh(value)",
+    subtitle: "Inverse hyperbolic tangent",
+    value: "\\tanh^{-1}()",
+  },
+  {
+    title: "Arccoth(value)",
+    subtitle: "Inverse hyperbolic cotangent",
+    value: "\\coth^{-1}()",
+  },
+  {
+    title: "Arcsech(value)",
+    subtitle: "Inverse hyperbolic secant",
+    value: "\\sech^{-1}()",
+  },
+  {
+    title: "Arccsch(value)",
+    subtitle: "Inverse hyperbolic cosecant",
+    value: "\\csch^{-1}()",
   },
 ];

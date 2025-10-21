@@ -40,7 +40,9 @@ const ConverterButton = ({
           }}
           className={`justify-center items-center  rounded-tl-[4px] rounded-tr-[4px] rounded-bl-[10px] rounded-br-[10px] border-t shadow-black border-l border-l-default-hilite border-t-default-hilite ${bgColor}`}
         >
-          <Text className={`text-[${fontSize}px] text-default-num`}>
+          <Text
+            style={{ color: "white", fontSize: fontSize, textAlign: "center" }}
+          >
             {label}
           </Text>
         </TouchableOpacity>

@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -99,76 +100,100 @@ const BottomSheetList = forwardRef<BottomSheetListRef, ListType>(
       });
 
     // --- Animation style ---
-    const animatedStyle = useAnimatedStyle(() => ({
+    const animatedSheet = useAnimatedStyle(() => ({
       transform: [{ translateY: translateY.value }],
+    }));
+
+    const animatedBackdrop = useAnimatedStyle(() => ({
       opacity: opacity.value,
     }));
 
     if (!visible) return null;
 
     return (
-      <GestureDetector gesture={pan}>
-        <Animated.View style={[styles.sheet, animatedStyle]}>
-          {/* Header with handle and close button */}
-          <View className="flex-row items-center justify-between px-2 pb-1 border-b border-b-[#707070ad]">
-            <Text className="text-lg font-bold text-white">{title}</Text>
+      <Animated.View style={[StyleSheet.absoluteFill, animatedBackdrop]}>
+        {/* Transparent backdrop */}
+        <TouchableWithoutFeedback
+          onPress={() => {
+            // Close when clicking outside
+            opacity.value = withTiming(0, { duration: 150 });
+            translateY.value = withTiming(
+              SNAP_POINTS.CLOSED,
+              { duration: 250 },
+              (finished) => {
+                if (finished) runOnJS(setVisible)(false);
+              }
+            );
+          }}
+        >
+          <View style={styles.backdrop} />
+        </TouchableWithoutFeedback>
 
-            {isConstants ? (
-              <TouchableOpacity
-                className=""
-                onPress={() => ref && (ref as any).current?.close()}
-              >
-                <Ionicons name="close-circle-outline" size={30} color="#fff" />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  router.push("/converter/converterList");
-                }}
-              >
-                <Text className="text-[#d465f0]">MORE</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+        {/* Bottom Sheet */}
+        <Animated.View style={[styles.sheet, animatedSheet]}>
+          {/* Header */}
+          <View className="w-12 h-1.5 bg-gray-400/60 rounded-full self-center my-2" />
+          <GestureDetector gesture={pan}>
+            <View className="flex-row items-center justify-between px-2 pb-3 border-b border-b-[#707070ad]">
+              <Text className="text-lg font-bold text-white">{title}</Text>
 
+              {isConstants ? (
+                <TouchableOpacity
+                  onPress={() => ref && (ref as any).current?.close()}
+                >
+                  <Ionicons
+                    name="close-circle-outline"
+                    size={30}
+                    color="#fff"
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    router.push("/converter/converterList");
+                  }}
+                >
+                  <Text className="text-[#d465f0]">MORE</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </GestureDetector>
+
+          {/* FlatList */}
           <FlatList
             data={data}
             keyExtractor={(item) => item.label}
             numColumns={isConstants ? 1 : 2}
             renderItem={({ item, index }) => (
-              <View>
+              <TouchableOpacity
+                onPress={() => {
+                  onPress(item);
+                  ref && (ref as any).current?.close();
+                }}
+                className={`${
+                  isConstants
+                    ? "flex-row items-center justify-between px-3 py-2 border-b border-b-[#707070ad]"
+                    : "flex-row"
+                }`}
+              >
                 {isConstants ? (
-                  <TouchableOpacity
-                    className="flex-row items-center justify-between px-3 py-2 border-b border-b-[#707070ad]"
-                    onPress={() => {
-                      onPress(item);
-                      ref && (ref as any).current?.close();
-                    }}
-                  >
+                  <>
                     <View className="flex-col">
                       <Text className="text-white">{item.name}</Text>
                       <Text className="text-[#e1e1e1]">{item.label}</Text>
                     </View>
                     <Text className="text-white">{item.symbol}</Text>
-                  </TouchableOpacity>
+                  </>
                 ) : (
-                  <TouchableOpacity
-                    className="flex-row "
-                    onPress={() => {
-                      onPress(item);
-                      ref && (ref as any).current?.close();
-                    }}
-                  >
-                    <View className="flex-row">
-                      <Text className="text-[#e1e1e1]">{index + 1}: </Text>
-                      <Text className="text-white">{item.label}</Text>
-                    </View>
-                  </TouchableOpacity>
+                  <View className="flex-row">
+                    <Text className="text-[#e1e1e1]">{index + 1}: </Text>
+                    <Text className="text-white">{item.label}</Text>
+                  </View>
                 )}
-              </View>
+              </TouchableOpacity>
             )}
             ItemSeparatorComponent={() => (
-              <View className="w-full h-[1px] bg-[#707070ad]"></View>
+              <View className="w-full h-[1px] bg-[#707070ad]" />
             )}
             columnWrapperStyle={
               !isConstants
@@ -181,7 +206,7 @@ const BottomSheetList = forwardRef<BottomSheetListRef, ListType>(
             }
           />
         </Animated.View>
-      </GestureDetector>
+      </Animated.View>
     );
   }
 );
@@ -198,5 +223,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 10,
+  },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
 });
