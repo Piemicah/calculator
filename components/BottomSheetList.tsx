@@ -216,7 +216,7 @@ export default BottomSheetList;
 const styles = StyleSheet.create({
   sheet: {
     position: "absolute",
-    top: 0,
+    top: 26,
     bottom: 0,
     width: "100%",
     backgroundColor: "#202020",

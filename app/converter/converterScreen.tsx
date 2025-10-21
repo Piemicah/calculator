@@ -3,8 +3,9 @@ import DisplayScreen from "@/components/DisplayScreen";
 import MathQuillEditor, {
   MathQuillEditorRef,
 } from "@/components/MathQuillEditor";
+import UnitConverter from "@/components/UnitConverter";
+import { conversionFactors } from "@/util/data";
 import { keys } from "@/util/keypads";
-import { getItem } from "@/util/storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import * as math from "mathjs";
@@ -31,14 +32,27 @@ const ConverterScreen = () => {
   });
   const [latex, setLatex] = useState<string>("");
   const [answer, setAnswer] = useState<string>("");
+  const [showList, setShowList] = useState<boolean>(false);
+  const [side, setSide] = useState<string>("left");
 
   const mathRef = useRef<MathQuillEditorRef>(null);
 
   const getUnit = async () => {
-    const leftValue = await getItem("leftUnit");
-    setLeftUnit(leftValue ?? "Select Unit");
-    const rightValue = await getItem("rightUnit");
-    setRightUnit(rightValue ?? "Select Unit");
+    const convList = conversionFactors.find((x) => x.title === title);
+    const data = convList?.data?.[0];
+    if (data) {
+      setLeftUnit({
+        name: data.name,
+        notation: data.notation,
+        rate: Number(data.rate),
+      });
+      // initialize right unit to the same default item if desired
+      setRightUnit({
+        name: data.name,
+        notation: data.notation,
+        rate: Number(data.rate),
+      });
+    }
   };
 
   useEffect(() => {
@@ -50,18 +64,19 @@ const ConverterScreen = () => {
     convert();
   }, [latex]);
 
+  const getListItem = (item: UnitProps) => {
+    if (side === "left") setLeftUnit(item);
+    else setRightUnit(item);
+  };
+
   const leftBtnClicked = () => {
-    router.push({
-      pathname: `/converter/[title]`,
-      params: { title: title, side: "left" },
-    });
+    setShowList(true);
+    setSide("left");
   };
 
   const rightBtnClicked = () => {
-    router.push({
-      pathname: `/converter/[title]`,
-      params: { title: title, side: "right" },
-    });
+    setShowList(true);
+    setSide("right");
   };
 
   const latexToExpression = (latex: string): string => {
@@ -311,6 +326,14 @@ const ConverterScreen = () => {
           <ConverterButton label="=" fxn={btnClicked} width={WIDTH} />
         </View>
       </View>
+
+      {showList && (
+        <UnitConverter
+          title={title}
+          onPress={getListItem}
+          setShowList={setShowList}
+        />
+      )}
     </SafeAreaView>
   );
 };

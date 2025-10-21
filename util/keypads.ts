@@ -40,11 +40,12 @@ export const keys: KeyType = {
   "a b/c": { value: "\\frac{}{}" },
   "◀": { value: "◀" },
   "▶": { value: "▶" },
-  "∫dx": { value: "\\int_{}^{}d", alpha: ":" },
+  "∫dx": { value: "\\int_{}^{}dx", shift: "\\frac{d()}{dx}", alpha: ":" },
   RCL: { value: "RCL", shift: "STO" },
   "M+": { value: "M+", shift: "M-", alpha: "M" },
   CONS: { value: "CONS", shift: "CONV" },
   hyp: { value: "hyp", alpha: "C" },
+  x: { value: "x" },
 
   // Added keys from converter
   "x!": { value: "!" },

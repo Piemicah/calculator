@@ -136,22 +136,29 @@ export default function MainScreen() {
       .replace(/\\sin\^\(-1\)\(([\S]+)\)/g, "asin($1)")
       .replace(/\\sinh\^\(-1\)\(([\S]+)\)/g, "asinh($1)")
       .replace(/\\sin/g, "sin")
-      .replace(/\\cos\^\(-1\)\(([\S]+)\)/g, "acos($1)")
       .replace(/\\cosh\^\(-1\)\(([\S]+)\)/g, "acosh($1)")
-      .replace(/\\cos/g, "cos")
+      .replace(/\\cos\^\(-1\)\(([\S]+)\)/g, "acos($1)")
       .replace(/\\cosh/g, "cosh")
+      .replace(/\\cos/g, "cos")
       .replace(/\\tan\^\(-1\)\(([\S]+)\)/g, "atan($1)")
       .replace(/\\tanh\^\(-1\)\(([\S]+)\)/g, "atanh($1)")
       .replace(/\\tan/g, "tan")
+      .replace(/\\coth\^\(-1\)\(([\S]+)\)/g, "acoth($1)")
       .replace(/\\coth/g, "coth")
+      .replace(/\\operatorname\(sech\)\^\(-1\)\(([\S]+)\)/g, "asech($1)")
+      .replace(/\\operatorname\(csch\)\^\(-1\)\(([\S]+)\)/g, "acsch($1)")
       .replace(/\\operatorname\(sech\)/g, "sech")
       .replace(/\\operatorname\(csch\)/g, "csch")
-      .replace(/\\frac\(([\S]+)\)\(([\S]+)\)/g, "(($1)/($2))")
-      .replace(/([\S]+)P([\S]+)/g, "(permutations($1,$2))")
-      .replace(/([\S]+)C([\S]+)/g, "(combinations($1,$2))")
       .replace(
-        /\\int_([\d]+)\^([\d]+)([\S]+)d([a-zA-Z])/g,
-        "(integrate('$3','$4',$1,$2))"
+        /\\frac\(d\(([^,]+),([^)]+)\)\)\(dx\)/g,
+        "derivative('$1','x').evaluate({x:$2})"
+      )
+      .replace(/\\frac\(d\(([\S]+)\)\)\(dx\)/g, "derivative('$1','x')")
+      .replace(/\\frac\(([\S]+)\)\(([\S]+)\)/g, "(($1)/($2))")
+
+      .replace(
+        /\\int_([\d]+)\^([\d]+)([\S]+)dx/g,
+        "(integrate('$3','x',$1,$2))"
       )
       .replace(/Pol\((\d+),(\d+)\)/g, "polar($1,$2)")
       .replace(/Rec\((\d+),(\d+)\)/g, "rec($1,$2)")
@@ -186,16 +193,16 @@ export default function MainScreen() {
       .replace(/m►km/g, "(0.001)")
 
       // 🟩 AREA
-      .replace(/m²►ft²/g, "(10.7639104167)")
-      .replace(/ft²►m²/g, "(0.09290304)")
-      .replace(/cm²►in²/g, "(0.15500031)")
-      .replace(/in²►cm²/g, "(6.4516)")
-      .replace(/km²►mi²/g, "(0.3861021585)")
-      .replace(/mi²►km²/g, "(2.5899881103)")
-      .replace(/acre►m²/g, "(4046.8564224)")
-      .replace(/m²►acre/g, "(0.0002471054)")
-      .replace(/hectare►m²/g, "(10000)")
-      .replace(/m²►hectare/g, "(0.0001)")
+      .replace(/m\^2►ft\^2/g, "(10.7639104167)")
+      .replace(/ft\^2►m\^2/g, "(0.09290304)")
+      .replace(/cm\^2►in\^2/g, "(0.15500031)")
+      .replace(/in\^2►cm\^2/g, "(6.4516)")
+      .replace(/km\^2►mi\^2/g, "(0.3861021585)")
+      .replace(/mi\^2►km\^2/g, "(2.5899881103)")
+      .replace(/acre►m\^2/g, "(4046.8564224)")
+      .replace(/m\^2►acre/g, "(0.0002471054)")
+      .replace(/hectare►m\^2/g, "(10000)")
+      .replace(/m\^2►hectare/g, "(0.0001)")
 
       // 🟨 VOLUME
       .replace(/L►mL/g, "(1000)")
@@ -206,8 +213,8 @@ export default function MainScreen() {
       .replace(/qt\(US\)►L/g, "(0.946352946)")
       .replace(/L►fl oz\(US\)/g, "(33.8140227)")
       .replace(/fl oz\(US\)►L/g, "(0.0295735296)")
-      .replace(/m³►L/g, "(1000)")
-      .replace(/L►m³/g, "(0.001)")
+      .replace(/m\^3►L/g, "(1000)")
+      .replace(/L►m\^3/g, "(0.001)")
 
       // 🟥 MASS / WEIGHT
       .replace(/kg►g/g, "(1000)")
@@ -250,18 +257,8 @@ export default function MainScreen() {
       .replace(/J►Wh/g, "(0.0002777778)")
       .replace(/kWh►MJ/g, "(3.6)")
       .replace(/MJ►kWh/g, "(0.277777778)")
-
-      // 🟦 DATA STORAGE
-      .replace(/bit►byte/g, "(0.125)")
-      .replace(/byte►bit/g, "(8)")
-      .replace(/KB►byte/g, "(1024)")
-      .replace(/byte►KB/g, "(0.0009765625)")
-      .replace(/MB►KB/g, "(1024)")
-      .replace(/KB►MB/g, "(0.0009765625)")
-      .replace(/GB►MB/g, "(1024)")
-      .replace(/MB►GB/g, "(0.0009765625)")
-      .replace(/TB►GB/g, "(1024)")
-      .replace(/GB►TB/g, "(0.0009765625)");
+      .replace(/([\S]+)P([\S]+)/g, "(permutations($1,$2))")
+      .replace(/([\S]+)C([\S]+)/g, "(combinations($1,$2))");
 
     return expression;
   };
@@ -415,7 +412,7 @@ export default function MainScreen() {
 
         <DisplayScreen>
           <MathQuillEditor ref={mathRef} initialLatex="" onChange={setLatex} />
-          {/* <View className="flex flex-1 mb-2 bg-red-500">
+          {/* <View className="flex-col flex-1 mb-2 bg-red-500">
             <MathQuillEditor initialLatex={answer} onChange={() => {}} />
           </View> */}
           <Text className="text-[18px] text-right">{answer}</Text>
@@ -465,7 +462,7 @@ export default function MainScreen() {
             </TouchableOpacity>
 
             <NormalButton label="MODE" />
-            <NormalButton label="" />
+            <NormalButton label="x" fxn={btnClicked} />
           </View>
           {/* small buttons */}
           <View className={`flex-col ${isLandscape ? "gap-0" : "gap-2"}`}>

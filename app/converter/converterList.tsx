@@ -1,5 +1,4 @@
-import { conversionFactors, conversionRates } from "@/util/data";
-import { setItem } from "@/util/storage";
+import { conversionRates } from "@/util/data";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
@@ -15,12 +14,6 @@ const itemClicked = (item: any) => {
     pathname: "/converter/converterScreen",
     params: { title: item.title },
   });
-  const convList = conversionFactors.find((x) => x.title === item.title);
-  const data = convList?.data;
-  if (data && data.length > 0) {
-    setItem("leftUnit", data[0]);
-    setItem("rightUnit", data[0]);
-  }
 };
 
 const ConverterList = () => {
@@ -35,7 +28,7 @@ const ConverterList = () => {
         >
           <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text className="text-white text-xl">Unit Converter</Text>
+        <Text className="text-xl text-white">Unit Converter</Text>
       </View>
 
       <SectionList
