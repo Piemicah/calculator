@@ -165,6 +165,7 @@ export default function MainScreen() {
       )
       .replace(/Pol\((\d+),(\d+)\)/g, "polar($1,$2)")
       .replace(/Rec\((\d+),(\d+)\)/g, "rec($1,$2)")
+      .replace(/([\d]+)\\angle([\d]+)/g, "$1*cos($2)+i*$1*sin($2)")
 
       // ✅ Replace "Ans" first before single-letter memory keys
       .replace(/\bAns\b/g, `${ansMemory}`)
@@ -525,7 +526,7 @@ export default function MainScreen() {
               <SmallButton label="ln" cap1="eˣ" mid="OCT" fxn={btnClicked} />
             </View>
             <View className="flex-row justify-between w-full">
-              <SmallButton label="( - )" cap1="[∠]" mid="A" />
+              <SmallButton label="( - )" cap1="∠" mid="A" fxn={btnClicked} />
               <SmallButton label="° ' ' '" cap1="&#x27F5;" mid="B" />
               <SmallButton label="hyp" mid="C" fxn={btnClicked} />
               <SmallButton label="sin" cap1="sin¯¹" mid="D" fxn={btnClicked} />
@@ -569,15 +570,15 @@ export default function MainScreen() {
             <BigButton label="1" cap2="[S-SUM]" mid="f" fxn={btnClicked} />
             <BigButton label="2" cap2="[S-VAR]" mid="p" fxn={btnClicked} />
             <BigButton label="3" cap2="[DISTR]" mid="n" fxn={btnClicked} />
-            <BigButton label="+" cap1="[r∠θ]" cap2="Pol(" fxn={btnClicked} />
-            <BigButton label="-" cap1="[a+bi]" cap2="Rec(" fxn={btnClicked} />
+            <BigButton label="+" cap2="[r∠θ]" cap1="Pol(" fxn={btnClicked} />
+            <BigButton label="-" cap2="[a+bi]" cap1="Rec(" fxn={btnClicked} />
           </View>
           <View className="flex-row justify-between w-full">
             <BigButton label="0" mid="Rnd" fxn={btnClicked} />
             <BigButton label="•" mid="Ran#" fxn={btnClicked} />
             <BigButton label="EXP" mid="π" cap2="∞" fxn={btnClicked} />
             <BigButton label="Ans" cap1="DRG>" fxn={btnClicked} />
-            <BigButton label="=" cap1="[Re-Im]" cap2="%" fxn={btnClicked} />
+            <BigButton label="=" cap2="[Re-Im]" cap1="%" fxn={btnClicked} />
           </View>
         </View>
       </View>
