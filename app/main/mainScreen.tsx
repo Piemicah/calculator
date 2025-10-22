@@ -119,6 +119,9 @@ export default function MainScreen() {
     "CONS",
     "CONV",
     "hyp",
+    "M+",
+    "M-",
+    "CLR ALL",
   ];
 
   const latexToExpression = (latex: string): string => {
@@ -165,6 +168,9 @@ export default function MainScreen() {
 
       // ✅ Replace "Ans" first before single-letter memory keys
       .replace(/\bAns\b/g, `${ansMemory}`)
+      .replace(/GCD/g, "gcd")
+      .replace(/LCM/g, "lcm")
+      .replace(/\\infty/g, "(Infinity)")
 
       // ✅ Use word boundaries (\b) for isolated letters
       .replace(/\bA\b/g, `(${memory.A})`)
@@ -275,54 +281,90 @@ export default function MainScreen() {
     try {
       if (specialBtns.includes(label)) {
         switch (label) {
-          case "AC":
+          case "AC": {
             mathRef.current?.clear();
             setAnswer("");
             break;
-          case "DEL":
+          }
+          case "DEL": {
             mathRef.current?.deleteLeft();
             break;
+          }
 
-          case "=":
+          case "=": {
             const expr = latexToExpression(latex);
             const ans = math.evaluate(expr);
 
             setAnswer(String(ans));
             setAnsMemory(String(ans));
             break;
-
+          }
           case "◀":
-          case "▶":
-            if (key === "◀") mathRef.current?.moveLeft(1);
+          case "▶": {
+            if (label === "◀") mathRef.current?.moveLeft(1);
             else mathRef.current?.moveRight(1);
             break;
+          }
 
-          case "STO":
+          case "STO": {
             setStoPressed(true);
             setRclPressed(false);
             break;
+          }
 
-          case "RCL":
+          case "RCL": {
             setRclPressed(true);
             setStoPressed(false);
             break;
+          }
 
-          case "CONS":
+          case "CONS": {
             constantSheetRef.current?.open();
             break;
-          case "CONV":
+          }
+          case "CONV": {
             conversionSheetRef.current?.open();
             break;
-          case "hyp":
+          }
+
+          case "hyp": {
             setHypPressed(!hypPressed);
             break;
+          }
+
+          case "M+":
+          case "M-": {
+            const ex = latexToExpression(latex);
+            let an = 0;
+            if (ex) {
+              if (label === "M+")
+                an = Number(memory.M) + Number(math.evaluate(ex));
+              else an = Number(memory.M) - Number(math.evaluate(ex));
+              setMemory && setMemory({ ...memory, M: an.toString() });
+              setAnswer(`${an}-->M`);
+            }
+
+            break;
+          }
+
+          case "CLR ALL": {
+            const memo = { ...memory };
+            (Object.keys(memo) as (keyof typeof memo)[]).forEach((key) => {
+              memo[key] = "0";
+            });
+            setMemory && setMemory(memo);
+            setAnswer("Memory Cleared!");
+            break;
+          }
         }
       } else {
         if (stoPressed && keys[key].alpha) {
           const expr = latexToExpression(latex);
           const ans = math.evaluate(expr);
-          setMemory && setMemory({ ...memory, [keys[key].alpha]: ans });
-          setAnswer(`${ans}-->${keys[key].alpha}`);
+          if (ans) {
+            setMemory && setMemory({ ...memory, [keys[key].alpha]: ans });
+            setAnswer(`${ans}-->${keys[key].alpha}`);
+          }
         } else if (rclPressed && keys[key].alpha) {
           const mm = memory[keys[key].alpha as keyof typeof memory];
           setAnswer(mm);
@@ -510,30 +552,30 @@ export default function MainScreen() {
           className={`flex-col justify-center ${isLandscape ? "flex-1" : ""}`}
         >
           <View className="flex-row justify-between w-full">
-            <BigButton label="7" cap1="" cap2="M" fxn={btnClicked} />
-            <BigButton label="8" cap2="G" fxn={btnClicked} />
-            <BigButton label="9" cap2="T" fxn={btnClicked} />
-            <BigButton label="DEL" mid="INS" fxn={btnClicked} />
+            <BigButton label="7" mid="M" fxn={btnClicked} />
+            <BigButton label="8" mid="G" fxn={btnClicked} />
+            <BigButton label="9" mid="T" fxn={btnClicked} />
+            <BigButton label="DEL" mid="" fxn={btnClicked} />
             <BigButton label="AC" mid="CLR ALL" fxn={btnClicked} />
           </View>
           <View className="flex-row justify-between w-full">
-            <BigButton label="4" cap1="[MAT]" cap2="µ" fxn={btnClicked} />
-            <BigButton label="5" cap1="[VCT]" cap2="m" fxn={btnClicked} />
-            <BigButton label="6" cap2="k" fxn={btnClicked} />
-            <BigButton label="×" mid="nPr" fxn={btnClicked} />
-            <BigButton label="÷" mid="nCr" fxn={btnClicked} />
+            <BigButton label="4" cap2="[MAT]" mid="µ" fxn={btnClicked} />
+            <BigButton label="5" cap2="[VCT]" mid="m" fxn={btnClicked} />
+            <BigButton label="6" mid="k" fxn={btnClicked} />
+            <BigButton label="×" mid="nPr" cap2="GCD" fxn={btnClicked} />
+            <BigButton label="÷" mid="nCr" cap2="LCM" fxn={btnClicked} />
           </View>
           <View className="flex-row justify-between w-full">
-            <BigButton label="1" cap1="[S-SUM]" cap2="f" fxn={btnClicked} />
-            <BigButton label="2" cap1="[S-VAR]" cap2="p" fxn={btnClicked} />
-            <BigButton label="3" cap1="[DISTR]" cap2="n" fxn={btnClicked} />
+            <BigButton label="1" cap2="[S-SUM]" mid="f" fxn={btnClicked} />
+            <BigButton label="2" cap2="[S-VAR]" mid="p" fxn={btnClicked} />
+            <BigButton label="3" cap2="[DISTR]" mid="n" fxn={btnClicked} />
             <BigButton label="+" cap1="[r∠θ]" cap2="Pol(" fxn={btnClicked} />
             <BigButton label="-" cap1="[a+bi]" cap2="Rec(" fxn={btnClicked} />
           </View>
           <View className="flex-row justify-between w-full">
             <BigButton label="0" mid="Rnd" fxn={btnClicked} />
             <BigButton label="•" mid="Ran#" fxn={btnClicked} />
-            <BigButton label="EXP" mid="π" fxn={btnClicked} />
+            <BigButton label="EXP" mid="π" cap2="∞" fxn={btnClicked} />
             <BigButton label="Ans" cap1="DRG>" fxn={btnClicked} />
             <BigButton label="=" cap1="[Re-Im]" cap2="%" fxn={btnClicked} />
           </View>

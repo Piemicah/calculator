@@ -19,13 +19,14 @@ const BigButton = ({
       ? `bg-${theme}-delacButton`
       : `bg-${theme}-bigButton`;
   const shiftColor = `text-${theme}-shift`;
+  const alphaColor = `text-${theme}-alpha`;
 
   return (
     <View className="flex-col content-center">
       <View className="flex flex-row justify-between">
         <Text className={`text-[12px] ${shiftColor}`}>{cap1}</Text>
         <Text className={`text-[12px] ${shiftColor}`}>{mid}</Text>
-        <Text className={`text-[12px] ${shiftColor}`}>{cap2}</Text>
+        <Text className={`text-[12px] ${alphaColor}`}>{cap2}</Text>
       </View>
       <View
         style={{
