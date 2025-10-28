@@ -23,7 +23,6 @@ export default function RootLayout() {
           <SafeAreaProvider>
             <StatusBar hidden={true} />
             <Stack
-              initialRouteName="main"
               screenOptions={{
                 headerShown: false,
                 navigationBarHidden: false,
@@ -33,6 +32,7 @@ export default function RootLayout() {
               <Stack.Screen name="formulas" />
               <Stack.Screen name="main" />
               <Stack.Screen name="converter" />
+              <Stack.Screen name="index" />
             </Stack>
           </SafeAreaProvider>
         </GestureHandlerRootView>
