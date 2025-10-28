@@ -485,22 +485,22 @@ export const conversionRates = [
     heading: "Electricity",
     data: [
       {
-        title: "Electric charge",
+        title: "Electric Charge",
         subtitle: "Coulomb, Ampere-hour, Faraday",
         img: images.electric_charge,
       },
       {
-        title: "Electric current",
+        title: "Electric Current",
         subtitle: "Ampere, Milliampere, Microampere",
         img: images.electric_current,
       },
       {
-        title: "Electrical resistance",
+        title: "Electrical Resistance",
         subtitle: "Ohm, Volt per ampere",
         img: images.electric_resistance,
       },
       {
-        title: "Electric capacitance",
+        title: "Electric Capacitance",
         subtitle: "Farad, MilliFarad",
         img: images.electric_capacitance,
       },
@@ -2440,6 +2440,353 @@ export const conversionFactors = [
         notation: "(lb/(ft·s))/ρ",
         rate: 1.488164e1,
       },
+    ],
+  },
+
+  // Electric Charge
+  {
+    title: "Electric Charge",
+    data: [
+      // --- SI Base Unit ---
+      { name: "Coulomb", notation: "C", rate: 1 }, // Base SI unit: 1 C = 1 A·s
+
+      // --- Submultiples ---
+      { name: "Millicoulomb", notation: "mC", rate: 1e-3 },
+      { name: "Microcoulomb", notation: "µC", rate: 1e-6 },
+      { name: "Nanocoulomb", notation: "nC", rate: 1e-9 },
+      { name: "Picocoulomb", notation: "pC", rate: 1e-12 },
+      { name: "FemtoCoulomb", notation: "fC", rate: 1e-15 },
+      { name: "Kilocoulomb", notation: "kC", rate: 1e3 },
+      { name: "Megacoulomb", notation: "MC", rate: 1e6 },
+
+      // --- CGS / Gaussian / EMU / ESU Units ---
+      {
+        name: "Statcoulomb (ESU of charge)",
+        notation: "statC",
+        rate: 3.33564e-10,
+      }, // 1 statC = 3.33564×10⁻¹⁰ C
+      { name: "Franklin", notation: "Fr", rate: 3.33564e-10 }, // Equivalent to statC
+      { name: "Abcoulomb (EMU of charge)", notation: "abC", rate: 10 }, // 1 abC = 10 C
+
+      // --- Atomic / Fundamental Units ---
+      { name: "Elementary charge", notation: "e", rate: 1.602176634e-19 }, // Charge of 1 proton/electron
+      { name: "Faraday (chemical charge)", notation: "F", rate: 96485.33212 }, // 1 mol e⁻ = 96485.33212 C
+      { name: "Mole of electrons", notation: "mol·e⁻", rate: 96485.33212 },
+      {
+        name: "Atomic unit of charge",
+        notation: "a.u. (charge)",
+        rate: 1.602176634e-19,
+      },
+
+      // --- Practical / Engineering Units ---
+      { name: "Ampere-second", notation: "A·s", rate: 1 },
+      { name: "Ampere-hour", notation: "A·h", rate: 3600 },
+      { name: "Milliampere-hour", notation: "mA·h", rate: 3.6 },
+      { name: "Microampere-hour", notation: "µA·h", rate: 3.6e-3 },
+      { name: "Kiloampere-hour", notation: "kA·h", rate: 3.6e6 },
+
+      // --- Alternative Derived Units ---
+      {
+        name: "Faraday constant (1 mol e⁻)",
+        notation: "F/mol",
+        rate: 96485.33212,
+      },
+      { name: "Coulomb per second (Ampere)", notation: "C/s", rate: 1 }, // Conceptual equivalent to current * time
+
+      // --- Historical / Obsolete Units ---
+      {
+        name: "Jar (old capacitor charge unit)",
+        notation: "jar",
+        rate: 1.11e-8,
+      }, // Historical (based on Leyden jar)
+      { name: "ESU charge", notation: "esu", rate: 3.33564e-10 },
+      { name: "EMU charge", notation: "emu", rate: 10 },
+      { name: "Franklin (Fr)", notation: "Fr", rate: 3.33564e-10 },
+
+      // --- Reference / Conceptual ---
+      {
+        name: "Charge of one electron",
+        notation: "−e",
+        rate: -1.602176634e-19,
+      },
+      { name: "Charge of one proton", notation: "+e", rate: 1.602176634e-19 },
+      {
+        name: "Charge of one mole of electrons",
+        notation: "Nₐ·e",
+        rate: 96485.33212,
+      },
+
+      // --- Multiples in electrochemistry ---
+      { name: "Decacoulomb", notation: "daC", rate: 10 },
+      { name: "Hectocoulomb", notation: "hC", rate: 100 },
+      { name: "Megacoulomb", notation: "MC", rate: 1e6 },
+      { name: "Gigacoulomb", notation: "GC", rate: 1e9 },
+    ],
+  },
+
+  // Electric Current
+  {
+    title: "Electric Current",
+    data: [
+      // --- SI Base Unit ---
+      { name: "Ampere", notation: "A", rate: 1 }, // Base SI unit
+
+      // --- Submultiples ---
+      { name: "Milliampere", notation: "mA", rate: 1e-3 },
+      { name: "Microampere", notation: "µA", rate: 1e-6 },
+      { name: "Nanoampere", notation: "nA", rate: 1e-9 },
+      { name: "Picoampere", notation: "pA", rate: 1e-12 },
+      { name: "Femtoampere", notation: "fA", rate: 1e-15 },
+      { name: "Kiloampere", notation: "kA", rate: 1e3 },
+      { name: "Megaampere", notation: "MA", rate: 1e6 },
+      { name: "Gigaampere", notation: "GA", rate: 1e9 },
+
+      // --- CGS Electromagnetic Units (EMU) ---
+      { name: "Abampere", notation: "abA", rate: 10 }, // 1 abA = 10 A
+      { name: "Biot", notation: "Bi", rate: 10 }, // 1 Bi = 10 A (same as abampere)
+
+      // --- CGS Electrostatic Units (ESU) ---
+      { name: "Statampere", notation: "statA", rate: 3.33564e-10 }, // 1 statA = 3.33564×10⁻¹⁰ A
+
+      // --- Derived / Conceptual Units ---
+      { name: "Coulomb per second", notation: "C/s", rate: 1 },
+      { name: "Ampere per square meter", notation: "A/m²", rate: 1 }, // Current density concept
+      { name: "Ampere-turn", notation: "A·turn", rate: 1 }, // Magnetic field winding measure
+      { name: "Ampere per meter", notation: "A/m", rate: 1 }, // Magnetic field strength (H)
+      {
+        name: "Statcoulomb per second",
+        notation: "statC/s",
+        rate: 3.33564e-10,
+      },
+
+      // --- Electrical and Plasma Physics Units ---
+      {
+        name: "Elementary charges per second",
+        notation: "e/s",
+        rate: 1.602176634e-19,
+      },
+      { name: "Faraday per second", notation: "F/s", rate: 96485.33212 },
+      { name: "Planck current", notation: "I_P", rate: 3.4789e25 }, // Theoretical natural unit of current
+
+      // --- Engineering / Application Units ---
+      { name: "Ampere RMS", notation: "A_rms", rate: 1 }, // Used for AC circuits
+      { name: "Peak Ampere", notation: "A_peak", rate: 1.4142 }, // For sinusoidal current
+      { name: "Ampere-hour per second", notation: "A·h/s", rate: 3600 },
+      { name: "Coulomb per second", notation: "C/s", rate: 1 },
+
+      // --- Historical / Obsolete Units ---
+      { name: "Millistatampere", notation: "mstatA", rate: 3.33564e-13 },
+      { name: "Statampere (CGS esu)", notation: "esu·s⁻¹", rate: 3.33564e-10 },
+      { name: "Ampère (old French spelling)", notation: "amp", rate: 1 },
+      { name: "Biot", notation: "Bi", rate: 10 },
+
+      // --- Practical / Laboratory Reference Values ---
+      {
+        name: "Current of 1 electron per second",
+        notation: "e/s",
+        rate: 1.602176634e-19,
+      },
+      { name: "Microampere-hour per second", notation: "µA·h/s", rate: 3.6e-3 },
+      { name: "Milliampere-hour per second", notation: "mA·h/s", rate: 3.6 },
+
+      // --- Additional Multiples ---
+      { name: "Deciampere", notation: "dA", rate: 0.1 },
+      { name: "Decaampere", notation: "daA", rate: 10 },
+      { name: "Hectoampere", notation: "hA", rate: 100 },
+      { name: "Teraampere", notation: "TA", rate: 1e12 },
+      { name: "Petaampere", notation: "PA", rate: 1e15 },
+    ],
+  },
+
+  // Electric Resistance
+  {
+    title: "Electrical Resistance",
+    data: [
+      // --- SI Base Unit ---
+      { name: "Ohm", notation: "Ω", rate: 1 }, // Base SI unit: 1 Ω = 1 V/A
+
+      // --- Submultiples ---
+      { name: "Milliohm", notation: "mΩ", rate: 1e-3 },
+      { name: "Microohm", notation: "µΩ", rate: 1e-6 },
+      { name: "Nanoohm", notation: "nΩ", rate: 1e-9 },
+      { name: "Picoohm", notation: "pΩ", rate: 1e-12 },
+      { name: "Femtoohm", notation: "fΩ", rate: 1e-15 },
+      { name: "Kiloohm", notation: "kΩ", rate: 1e3 },
+      { name: "Megaohm", notation: "MΩ", rate: 1e6 },
+      { name: "Gigaohm", notation: "GΩ", rate: 1e9 },
+      { name: "Teraohm", notation: "TΩ", rate: 1e12 },
+      { name: "Petaohm", notation: "PΩ", rate: 1e15 },
+
+      // --- Derived / Equivalent Expressions ---
+      { name: "Volt per Ampere", notation: "V/A", rate: 1 },
+      { name: "Joule-second per Coulomb squared", notation: "J·s/C²", rate: 1 },
+      { name: "Weber per Coulomb per second", notation: "Wb/(C·s)", rate: 1 },
+
+      // --- CGS (EMU / ESU) Units ---
+      { name: "Abohm (EMU of resistance)", notation: "abΩ", rate: 1e-9 }, // 1 abΩ = 10⁻⁹ Ω
+      {
+        name: "Statohm (ESU of resistance)",
+        notation: "statΩ",
+        rate: 8.98755e11,
+      }, // 1 statΩ ≈ 8.98755×10¹¹ Ω
+
+      // --- Practical / Engineering Units ---
+      { name: "Ohm per meter", notation: "Ω/m", rate: 1 }, // Resistivity per unit length
+      { name: "Ohm per square", notation: "Ω/□", rate: 1 }, // Sheet resistance
+      { name: "Megaohm per meter", notation: "MΩ/m", rate: 1e6 },
+      { name: "Kiloohm per meter", notation: "kΩ/m", rate: 1e3 },
+
+      // --- Reference / Common Nominal Values ---
+      { name: "Resistor 1/4W (10Ω)", notation: "10Ω", rate: 10 },
+      { name: "Resistor 1kΩ", notation: "1kΩ", rate: 1e3 },
+      { name: "Resistor 10kΩ", notation: "10kΩ", rate: 1e4 },
+      { name: "Resistor 1MΩ", notation: "1MΩ", rate: 1e6 },
+
+      // --- Material-based Units ---
+      { name: "Ohm-meter (Resistivity)", notation: "Ω·m", rate: 1 },
+      { name: "Microohm-centimeter", notation: "µΩ·cm", rate: 1e-8 },
+      { name: "Ohm-centimeter", notation: "Ω·cm", rate: 0.01 },
+      { name: "Ohm-inch", notation: "Ω·in", rate: 0.0254 },
+      { name: "Microohm-meter", notation: "µΩ·m", rate: 1e-6 },
+      { name: "Nanoohm-meter", notation: "nΩ·m", rate: 1e-9 },
+
+      // --- Derived / Related Concepts ---
+      { name: "Siemens inverse", notation: "1/S", rate: 1 }, // 1 Ω = 1 / S (reciprocal of conductance)
+      { name: "Mho", notation: "℧", rate: 1 }, // Obsolete symbol for 1/Ω
+      { name: "Reciprocal Siemens", notation: "S⁻¹", rate: 1 },
+
+      // --- Historical / Obsolete Units ---
+      { name: "Abohm", notation: "abΩ", rate: 1e-9 },
+      { name: "Statohm", notation: "statΩ", rate: 8.98755e11 },
+      { name: "Siemens (reciprocal of Ohm)", notation: "S", rate: 1 },
+      { name: "Mho (obsolete reciprocal symbol)", notation: "℧", rate: 1 },
+      {
+        name: "International Ohm (1881 standard)",
+        notation: "Ω_int",
+        rate: 1.00049,
+      },
+      { name: "Legal Ohm (1908)", notation: "Ω_legal", rate: 1.00049 },
+      { name: "Practical Ohm (1860s)", notation: "Ω_practical", rate: 1.011 },
+
+      // --- High-Resistance and Low-Resistance Units ---
+      { name: "Millisiemens inverse", notation: "mS⁻¹", rate: 1e3 },
+      { name: "Microsiemens inverse", notation: "µS⁻¹", rate: 1e6 },
+      { name: "Kilosiemens inverse", notation: "kS⁻¹", rate: 1e-3 },
+
+      // --- Theoretical / Natural Units ---
+      { name: "Planck resistance", notation: "R_P", rate: 29.9792458e3 }, // ~29.98 kΩ
+      { name: "Quantum of resistance", notation: "R_K", rate: 25812.80745 }, // Von Klitzing constant
+      {
+        name: "Half quantum of resistance",
+        notation: "R_K/2",
+        rate: 12906.403725,
+      },
+      {
+        name: "Triple quantum of resistance",
+        notation: "R_K/3",
+        rate: 8604.26915,
+      },
+
+      // --- Derived Electromagnetic Forms ---
+      { name: "Vacuum impedance", notation: "Z₀", rate: 376.730313668 }, // 1/(c·ε₀) ≈ 376.73 Ω
+      { name: "Ohm per square (Sheet resistance)", notation: "Ω/□", rate: 1 },
+    ],
+  },
+
+  // Electric Capacitance
+  {
+    title: "Electric Capacitance",
+    data: [
+      // --- SI Base Unit ---
+      { name: "Farad", notation: "F", rate: 1 }, // Base SI unit: 1 F = 1 C/V
+
+      // --- Submultiples ---
+      { name: "Millifarad", notation: "mF", rate: 1e-3 },
+      { name: "Microfarad", notation: "µF", rate: 1e-6 },
+      { name: "Nanofarad", notation: "nF", rate: 1e-9 },
+      { name: "Picofarad", notation: "pF", rate: 1e-12 },
+      { name: "Femtofarad", notation: "fF", rate: 1e-15 },
+      { name: "Attofarad", notation: "aF", rate: 1e-18 },
+      { name: "Kilofarad", notation: "kF", rate: 1e3 },
+      { name: "Megafarad", notation: "MF", rate: 1e6 },
+      { name: "Gigafarad", notation: "GF", rate: 1e9 },
+
+      // --- Derived / Equivalent Forms ---
+      { name: "Coulomb per Volt", notation: "C/V", rate: 1 },
+      { name: "Ampere-second per Volt", notation: "A·s/V", rate: 1 },
+      { name: "Second per Ohm", notation: "s/Ω", rate: 1 }, // since 1 F = 1 s/Ω
+      { name: "Coulomb per Joule per Volt", notation: "C/(J/V)", rate: 1 },
+
+      // --- CGS Units ---
+      {
+        name: "Statfarad (ESU of capacitance)",
+        notation: "statF",
+        rate: 1.11265e-12,
+      }, // 1 statF = 1.11265×10⁻¹² F
+      { name: "Abfarad (EMU of capacitance)", notation: "abF", rate: 1e9 }, // 1 abF = 10⁹ F
+      {
+        name: "Centimeter (Gaussian CGS unit)",
+        notation: "cm",
+        rate: 1.11265e-12,
+      }, // 1 cm capacitance = 1.11265×10⁻¹² F
+
+      // --- Practical / Engineering Units ---
+      { name: "Microfarad per volt", notation: "µF/V", rate: 1e-6 },
+      { name: "Farad per meter", notation: "F/m", rate: 1 }, // permittivity concept
+      { name: "Microfarad per meter", notation: "µF/m", rate: 1e-6 },
+      { name: "Nanofarad per meter", notation: "nF/m", rate: 1e-9 },
+      { name: "Farad per square meter", notation: "F/m²", rate: 1 }, // for areal capacitance
+      {
+        name: "Microfarad per square centimeter",
+        notation: "µF/cm²",
+        rate: 1e-2,
+      },
+
+      // --- Common Engineering Values ---
+      {
+        name: "1 µF (common electrolytic capacitor)",
+        notation: "1µF",
+        rate: 1e-6,
+      },
+      { name: "100 nF (decoupling capacitor)", notation: "100nF", rate: 1e-7 },
+      { name: "10 pF (RF capacitor)", notation: "10pF", rate: 1e-11 },
+      { name: "1 F (supercapacitor)", notation: "1F", rate: 1 },
+
+      // --- Theoretical / Natural Units ---
+      { name: "Planck capacitance", notation: "C_P", rate: 1.8755459e-18 },
+      {
+        name: "Vacuum permittivity equivalent (per meter)",
+        notation: "ε₀/m",
+        rate: 8.8541878128e-12,
+      },
+      {
+        name: "Atomic unit of capacitance",
+        notation: "a.u. (capacitance)",
+        rate: 1.648777274e-41,
+      },
+      { name: "Electrostatic unit (ESU)", notation: "esu", rate: 1.11265e-12 },
+
+      // --- Historical / Obsolete Units ---
+      { name: "Jar (Leyden jar)", notation: "jar", rate: 1.11e-8 }, // early unit (~1.11×10⁻⁸ F)
+      {
+        name: "Micro-microfarad (old term for pF)",
+        notation: "mmf",
+        rate: 1e-12,
+      },
+      {
+        name: "Centimeter of capacitance",
+        notation: "cm (CGS)",
+        rate: 1.11265e-12,
+      },
+      { name: "Abohm-second", notation: "abΩ·s", rate: 1e9 },
+      { name: "Statohm-second", notation: "statΩ·s", rate: 8.98755e11 },
+
+      // --- Derived / Relationship Units ---
+      { name: "Farad per volt", notation: "F/V", rate: 1 },
+      { name: "Farad per coulomb", notation: "F/C", rate: 1 },
+      { name: "Second per ohm", notation: "s/Ω", rate: 1 },
+      { name: "Henry inverse", notation: "1/H", rate: 1 }, // reciprocal of inductance
+      { name: "Ampere-second per volt", notation: "A·s/V", rate: 1 },
     ],
   },
 ];

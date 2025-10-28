@@ -46,7 +46,7 @@ export const keys: KeyType = {
   CONS: { value: "CONS", shift: "CONV" },
   hyp: { value: "hyp", alpha: "C" },
   x: { value: "x" },
-  "( - )": { value: "-", shift: "\\angle" },
+  "( - )": { value: "-", shift: "\\angle", alpha: "A" },
 
   // Added keys from converter
   "x!": { value: "!" },

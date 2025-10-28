@@ -4,6 +4,7 @@ import MathQuillEditor, {
   MathQuillEditorRef,
 } from "@/components/MathQuillEditor";
 import UnitConverter from "@/components/UnitConverter";
+import useOrientation from "@/hooks/useOrientation";
 import { conversionFactors } from "@/util/data";
 import { keys } from "@/util/keypads";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -14,8 +15,6 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type UnitProps = { name: string; notation: string; rate: number };
-const WIDTH = 74;
-const HEIGHT = 40;
 
 const ConverterScreen = () => {
   const { title } = useLocalSearchParams<{ title: string }>();
@@ -36,6 +35,10 @@ const ConverterScreen = () => {
   const [side, setSide] = useState<string>("left");
 
   const mathRef = useRef<MathQuillEditorRef>(null);
+  const { isLandscape } = useOrientation();
+
+  const WIDTH = isLandscape ? 48 : 74;
+  const HEIGHT = 40;
 
   const getUnit = async () => {
     const convList = conversionFactors.find((x) => x.title === title);
@@ -213,7 +216,9 @@ const ConverterScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 px-1 bg-default-panel">
-      <View className="bg-[#2e2e2e] w-full h-14  flex-row items-center">
+      <View
+        className={`bg-[#2e2e2e] w-full ${isLandscape ? "h-10" : "h-14"} flex-row items-center`}
+      >
         <TouchableOpacity
           className="justify-center rounded-full size-8 "
           onPress={() => {
@@ -228,7 +233,7 @@ const ConverterScreen = () => {
       <View className="flex-row items-center justify-between my-2">
         <ConverterButton
           label={leftUnit.name}
-          width={160}
+          width={isLandscape ? 260 : 160}
           height={40}
           fontSize={
             leftUnit.name.length <= 8
@@ -247,7 +252,7 @@ const ConverterScreen = () => {
         </TouchableOpacity>
         <ConverterButton
           label={rightUnit.name}
-          width={160}
+          width={isLandscape ? 260 : 160}
           height={40}
           fontSize={
             rightUnit.name.length <= 8
@@ -276,54 +281,73 @@ const ConverterScreen = () => {
           <Text className="text-xl">{rightUnit.notation}</Text>
         </View>
       </DisplayScreen>
-      <View className="gap-4 mt-4">
-        <View className="flex-row justify-between w-full">
-          <ConverterButton label="◀" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="▶" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="DEL" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="AC" fxn={btnClicked} width={WIDTH} />
+      <View
+        className={`gap-4 ${isLandscape ? "mt-1" : "mt-4"} ${isLandscape ? "flex-row" : "flex-col"}`}
+      >
+        <View
+          className={`${isLandscape ? "gap-1 mt-4 w-1/3" : "gap-4 w-full"}`}
+        >
+          <View className={`flex-row justify-between w-full`}>
+            <ConverterButton label="◀" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="▶" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="DEL" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="AC" fxn={btnClicked} width={WIDTH} />
+          </View>
+          <View className="flex-row justify-between w-full">
+            <ConverterButton label="a b/c" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="√" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="x²" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="xⁿ" fxn={btnClicked} width={WIDTH} />
+          </View>
+          <View className="flex-row justify-between w-full">
+            <ConverterButton label="x¯¹" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="(" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label=")" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="x!" fxn={btnClicked} width={WIDTH} />
+          </View>
         </View>
-        <View className="flex-row justify-between w-full">
-          <ConverterButton label="a b/c" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="√" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="x²" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="xⁿ" fxn={btnClicked} width={WIDTH} />
+
+        <View
+          className={`${isLandscape ? "gap-1 mt-4 w-1/3" : "gap-4 w-full"}`}
+        >
+          <View className="flex-row justify-between w-full">
+            <ConverterButton label="7" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="8" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="9" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="×" fxn={btnClicked} width={WIDTH} />
+          </View>
+          <View className="flex-row justify-between w-full">
+            <ConverterButton label="4" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="5" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="6" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="÷" fxn={btnClicked} width={WIDTH} />
+          </View>
+          <View className="flex-row justify-between w-full">
+            <ConverterButton label="1" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="2" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="3" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="+" fxn={btnClicked} width={WIDTH} />
+          </View>
         </View>
-        <View className="flex-row justify-between w-full">
-          <ConverterButton label="x¯¹" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="(" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label=")" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="x!" fxn={btnClicked} width={WIDTH} />
-        </View>
-        <View className="flex-row justify-between w-full">
-          <ConverterButton label="7" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="8" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="9" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="×" fxn={btnClicked} width={WIDTH} />
-        </View>
-        <View className="flex-row justify-between w-full">
-          <ConverterButton label="4" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="5" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="6" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="÷" fxn={btnClicked} width={WIDTH} />
-        </View>
-        <View className="flex-row justify-between w-full">
-          <ConverterButton label="1" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="2" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="3" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="+" fxn={btnClicked} width={WIDTH} />
-        </View>
-        <View className="flex-row justify-between w-full">
-          <ConverterButton label="0" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="•" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="EXP" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="-" fxn={btnClicked} width={WIDTH} />
-        </View>
-        <View className="flex-row justify-between w-full">
-          <ConverterButton label="log" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="ln" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="%" fxn={btnClicked} width={WIDTH} />
-          <ConverterButton label="=" fxn={btnClicked} width={WIDTH} />
+
+        <View className={`gap-4 ${isLandscape ? "w-1/3 mt-4" : "w-full"}`}>
+          <View
+            className={`flex-row ${isLandscape ? "gap-2" : "justify-between"} w-full`}
+          >
+            <ConverterButton label="0" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="•" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="EXP" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="-" fxn={btnClicked} width={WIDTH} />
+          </View>
+
+          <View
+            className={`flex-row ${isLandscape ? "gap-2" : "justify-between"} w-full`}
+          >
+            <ConverterButton label="log" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="ln" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="%" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="=" fxn={btnClicked} width={WIDTH} />
+          </View>
         </View>
       </View>
 
