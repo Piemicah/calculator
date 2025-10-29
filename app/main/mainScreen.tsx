@@ -132,7 +132,7 @@ export default function MainScreen() {
       .replace(/\\div/g, "/")
       .replace(/\\log/g, "log10")
       .replace(/\\ln/g, "log")
-      .replace(/\\pi/g, "pi")
+      .replace(/\\pi/g, "(pi)")
       .replace(/\\sqrt\[3\]/g, "cbrt")
       .replace(/\\sqrt\[(\d+)\]\((\d+)\)/g, "$2^(1/$1)")
       .replace(/\\sqrt/g, "sqrt")
@@ -165,7 +165,10 @@ export default function MainScreen() {
       )
       .replace(/Pol\((\d+),(\d+)\)/g, "polar($1,$2)")
       .replace(/Rec\((\d+),(\d+)\)/g, "rec($1,$2)")
-      .replace(/([\d]+)\\angle([\d]+)/g, "$1*cos($2)+i*$1*sin($2)")
+      .replace(
+        /(\([^)]+\)|-?\b[0-9a-zA-Z.]+)\\angle(\\?[a-zA-Z0-9.+\-*/()]+)/g,
+        "(($1)*cos($2)+i*($1)*sin($2))"
+      )
 
       // ✅ Replace "Ans" first before single-letter memory keys
       .replace(/\bAns\b/g, `${ansMemory}`)

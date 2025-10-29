@@ -28,9 +28,9 @@ export default function RootLayout() {
                 navigationBarHidden: false,
               }}
             >
+              <Stack.Screen name="main" />
               <Stack.Screen name="themes" />
               <Stack.Screen name="formulas" />
-              <Stack.Screen name="main" />
               <Stack.Screen name="converter" />
               <Stack.Screen name="index" />
             </Stack>
