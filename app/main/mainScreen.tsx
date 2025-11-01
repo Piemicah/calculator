@@ -132,7 +132,7 @@ export default function MainScreen() {
       .replace(/\\div/g, "/")
       .replace(/\\log/g, "log10")
       .replace(/\\ln/g, "log")
-      .replace(/\\pi/g, "(pi)")
+      .replace(/\\pi/g, "pi")
       .replace(/\\sqrt\[3\]/g, "cbrt")
       .replace(/\\sqrt\[(\d+)\]\((\d+)\)/g, "$2^(1/$1)")
       .replace(/\\sqrt/g, "sqrt")
@@ -156,11 +156,11 @@ export default function MainScreen() {
         /\\frac\(d\(([^,]+),([^)]+)\)\)\(dx\)/g,
         "derivative('$1','x').evaluate({x:$2})"
       )
-      .replace(/\\frac\(d\(([\S]+)\)\)\(dx\)/g, "derivative('$1','x')")
-      .replace(/\\frac\(([\S]+)\)\(([\S]+)\)/g, "(($1)/($2))")
+      .replace(/\\frac\(d\(([^)]+)\)\)\(dx\)/g, "derivative('$1','x')")
+      .replace(/\\frac\(([^)]+)\)\(([^)]+)\)/g, "(($1)/($2))")
 
       .replace(
-        /\\int_([\d]+)\^([\d]+)([\S]+)dx/g,
+        /\\int_(\([^)]+\)|[^^]+)\^(\([^)]+\)|[^(]+)\(([\S)]+)\)dx/g,
         "(integrate('$3','x',$1,$2))"
       )
       .replace(/Pol\((\d+),(\d+)\)/g, "polar($1,$2)")

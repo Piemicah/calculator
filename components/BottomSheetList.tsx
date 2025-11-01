@@ -18,6 +18,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -51,6 +52,8 @@ const BottomSheetList = forwardRef<BottomSheetListRef, ListType>(
     const translateY = useSharedValue(SNAP_POINTS.CLOSED);
     const opacity = useSharedValue(0);
     const startY = useSharedValue(0);
+
+    const insets = useSafeAreaInsets();
 
     // --- Expose methods to parent ---
     useImperativeHandle(ref, () => ({
@@ -130,7 +133,9 @@ const BottomSheetList = forwardRef<BottomSheetListRef, ListType>(
         </TouchableWithoutFeedback>
 
         {/* Bottom Sheet */}
-        <Animated.View style={[styles.sheet, animatedSheet]}>
+        <Animated.View
+          style={[styles.sheet, animatedSheet, { bottom: insets.bottom }]}
+        >
           {/* Header */}
           <View className="w-12 h-1.5 bg-gray-400/60 rounded-full self-center my-2" />
           <GestureDetector gesture={pan}>
@@ -217,7 +222,7 @@ const styles = StyleSheet.create({
   sheet: {
     position: "absolute",
     top: 26,
-    bottom: 0,
+    // bottom: 0,
     width: "100%",
     backgroundColor: "#202020",
     borderTopLeftRadius: 20,

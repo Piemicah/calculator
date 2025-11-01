@@ -41,8 +41,8 @@ export const scientificConstants = [
   },
   {
     name: "Muon mass",
-    label: "1.67262189821 × 10^-27",
-    value: "1.67262189821e-27",
+    label: "1.67262189821 × 10⁻²⁷ kg",
+    value: "1.67262189821\\times 10^{-27}",
     symbol: "mµ",
   },
   {

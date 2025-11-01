@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type HypeProps = {
   getHypItem: (item: any) => void;
@@ -20,13 +21,17 @@ export type HypeItemProps = {
 };
 
 const Hyperbolic = ({ getHypItem, setHypPressed }: HypeProps) => {
+  const insets = useSafeAreaInsets();
   return (
     // The full-screen transparent backdrop
     <TouchableWithoutFeedback onPress={() => setHypPressed(false)}>
       <View className="absolute inset-0 z-20 bg-black/40">
         {/* The actual bottom sheet */}
         <TouchableWithoutFeedback onPress={() => {}}>
-          <View className="absolute bottom-0 h-[75vh] w-full bg-defaultBg rounded-t-2xl">
+          <View
+            className="absolute  h-[75vh] w-full bg-defaultBg rounded-t-2xl"
+            style={{ bottom: insets.bottom }}
+          >
             <FlatList
               data={hyperbolic}
               keyExtractor={(item, index) => item.title + index}
