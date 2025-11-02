@@ -20,6 +20,8 @@ export type MathQuillEditorRef = {
   moveRight: (steps?: number) => void;
   deleteLeft: () => void;
   setCursor: (pos: { fromEnd?: number; fromStart?: number }) => void;
+  moveUp: (steps?: number) => void;
+  moveDown: (steps?: number) => void;
 };
 
 const MathQuillEditor = forwardRef<MathQuillEditorRef, Props>(
@@ -98,6 +100,15 @@ const MathQuillEditor = forwardRef<MathQuillEditorRef, Props>(
                 for (let i = 0; i < steps; i++) mathField.keystroke("Left");
               }
             }
+
+            if (msg.type === "moveUp") {
+  let steps = msg.value || 1;
+  for (let i = 0; i < steps; i++) mathField.keystroke("Up");
+}
+if (msg.type === "moveDown") {
+  let steps = msg.value || 1;
+  for (let i = 0; i < steps; i++) mathField.keystroke("Down");
+}
           });
         </script>
       </body>
@@ -151,6 +162,16 @@ const MathQuillEditor = forwardRef<MathQuillEditorRef, Props>(
       },
       setCursor: (pos: { fromEnd?: number; fromStart?: number }) => {
         webRef.current?.postMessage(JSON.stringify({ type: "setCursor", pos }));
+      },
+      moveUp: (steps = 1) => {
+        webRef.current?.postMessage(
+          JSON.stringify({ type: "moveUp", value: steps })
+        );
+      },
+      moveDown: (steps = 1) => {
+        webRef.current?.postMessage(
+          JSON.stringify({ type: "moveDown", value: steps })
+        );
       },
     }));
 

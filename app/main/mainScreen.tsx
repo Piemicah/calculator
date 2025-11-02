@@ -8,7 +8,6 @@ import Hyperbolic, { HypeItemProps } from "@/components/Hyperbolic";
 import MathQuillEditor, {
   MathQuillEditorRef,
 } from "@/components/MathQuillEditor";
-import NormalButton from "@/components/NormalButton";
 import SmallButton from "@/components/SmallButton";
 import { Colors } from "@/constants/Colors";
 import { useMemory } from "@/hooks/memoryContext";
@@ -113,6 +112,8 @@ export default function MainScreen() {
     "=",
     "◀",
     "▶",
+    "▲",
+    "▼",
     "ENG",
     "STO",
     "RCL",
@@ -122,6 +123,7 @@ export default function MainScreen() {
     "M+",
     "M-",
     "CLR ALL",
+    "Ran#",
   ];
 
   const latexToExpression = (latex: string): string => {
@@ -175,6 +177,7 @@ export default function MainScreen() {
       .replace(/GCD/g, "gcd")
       .replace(/LCM/g, "lcm")
       .replace(/\\infty/g, "(Infinity)")
+      .replace(/RandInt\(([\d]+),([\d]+)\)/g, "(floor(random()*($2-$1+1))+$1)")
 
       // ✅ Use word boundaries (\b) for isolated letters
       .replace(/\bA\b/g, `(${memory.A})`)
@@ -304,9 +307,13 @@ export default function MainScreen() {
             break;
           }
           case "◀":
-          case "▶": {
+          case "▶":
+          case "▲":
+          case "▼": {
             if (label === "◀") mathRef.current?.moveLeft(1);
-            else mathRef.current?.moveRight(1);
+            else if (label === "▶") mathRef.current?.moveRight(1);
+            else if (label === "▲") mathRef.current?.moveUp(1);
+            else mathRef.current?.moveDown(1);
             break;
           }
 
@@ -360,6 +367,11 @@ export default function MainScreen() {
             setAnswer("Memory Cleared!");
             break;
           }
+
+          case "Ran#":
+            const ran = math.random();
+            mathRef.current?.insert(ran.toString());
+            break;
         }
       } else {
         if (stoPressed && keys[key].alpha) {
@@ -407,7 +419,7 @@ export default function MainScreen() {
 
   return (
     <SafeAreaView
-      className={`flex-1 justify-between items-center ${bgColor} ${isLandscape ? "pt-0 px-3" : "pt-10 px-2"} relative`}
+      className={`flex-1 justify-between items-center ${bgColor} ${isLandscape ? "pt-0 px-3" : "pt-8 px-2"} relative`}
     >
       <View className="w-full">
         <View className="flex-row justify-start w-full gap-4 pl-2 mb-1">
@@ -463,6 +475,28 @@ export default function MainScreen() {
           </View> */}
           <Text className="text-[18px] text-right">{answer}</Text>
         </DisplayScreen>
+        {!isLandscape && (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.dispatch(DrawerActions.openDrawer());
+            }}
+          >
+            <Ionicons
+              name="options"
+              size={34}
+              color={
+                typeof Colors[theme as keyof typeof Colors] === "object" &&
+                Colors[theme as keyof typeof Colors] !== null
+                  ? (
+                      Colors[theme as keyof typeof Colors] as {
+                        bigButton: string;
+                      }
+                    ).bigButton
+                  : "#000"
+              }
+            />
+          </TouchableOpacity>
+        )}
       </View>
       <View
         className={`${isLandscape ? "flex-row gap-3 items-end" : "flex-col"}`}
@@ -486,38 +520,20 @@ export default function MainScreen() {
                 setShiftPressed(false);
               }}
             />
-            <TouchableOpacity
-              onPress={() => {
-                navigation.dispatch(DrawerActions.openDrawer());
-              }}
-            >
-              <Ionicons
-                name="options-outline"
-                size={32}
-                color={
-                  typeof Colors[theme as keyof typeof Colors] === "object" &&
-                  Colors[theme as keyof typeof Colors] !== null
-                    ? (
-                        Colors[theme as keyof typeof Colors] as {
-                          bigButton: string;
-                        }
-                      ).bigButton
-                    : "#000"
-                }
-              />
-            </TouchableOpacity>
 
-            <NormalButton label="MODE" />
-            <NormalButton label="x" fxn={btnClicked} />
+            <SmallButton label="◀" fxn={btnClicked} />
+            <SmallButton label="▶" fxn={btnClicked} />
+            <SmallButton label="MODE" />
+            <SmallButton label="x" fxn={btnClicked} />
           </View>
           {/* small buttons */}
           <View className={`flex-col ${isLandscape ? "gap-0" : "gap-2"}`}>
             <View className="flex-row justify-between w-full">
               <SmallButton label="CALC" cap1="SOLVE" mid="=" />
               <SmallButton label="∫dx" cap1="d/dx" mid=":" fxn={btnClicked} />
-              <SmallButton label="◀" cap1=" " fxn={btnClicked} />
-              <SmallButton label="▶" cap1=" " fxn={btnClicked} />
-              <SmallButton label="x¯¹" cap1="x!" mid="LOGIC" fxn={btnClicked} />
+              <SmallButton label="▲" cap1=" " fxn={btnClicked} />
+              <SmallButton label="▼" cap1=" " fxn={btnClicked} />
+              <SmallButton label="x⁻¹" cap1="x!" mid="LOGIC" fxn={btnClicked} />
               <SmallButton label="CONS" cap2="CONV" fxn={btnClicked} />
             </View>
             <View className="flex-row justify-between w-full">
@@ -538,12 +554,7 @@ export default function MainScreen() {
             </View>
             <View className="flex-row justify-between w-full">
               <SmallButton label="RCL" cap1="STO" fxn={btnClicked} />
-              <SmallButton
-                label="ENG"
-                cap1="&#x27F5;"
-                cap2="i"
-                fxn={btnClicked}
-              />
+              <SmallButton label="ENG" cap2="i" mid="" fxn={btnClicked} />
               <SmallButton label="(" cap1="[" fxn={btnClicked} />
               <SmallButton label=")" cap1="]" mid="X" fxn={btnClicked} />
               <SmallButton label="," cap1=";" mid="Y" fxn={btnClicked} />
@@ -577,7 +588,7 @@ export default function MainScreen() {
             <BigButton label="-" cap2="[a+bi]" cap1="Rec(" fxn={btnClicked} />
           </View>
           <View className="flex-row justify-between w-full">
-            <BigButton label="0" mid="Rnd" fxn={btnClicked} />
+            <BigButton label="0" mid="RandInt" fxn={btnClicked} />
             <BigButton label="•" mid="Ran#" fxn={btnClicked} />
             <BigButton label="EXP" mid="π" cap2="∞" fxn={btnClicked} />
             <BigButton label="Ans" cap1="DRG>" fxn={btnClicked} />
