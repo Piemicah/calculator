@@ -33,6 +33,7 @@ export default function RootLayout() {
               <Stack.Screen name="formulas" />
               <Stack.Screen name="converter" />
               <Stack.Screen name="index" />
+              <Stack.Screen name="baseScreen" />
             </Stack>
           </SafeAreaProvider>
         </GestureHandlerRootView>

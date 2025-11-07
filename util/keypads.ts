@@ -53,8 +53,25 @@ export const keys: KeyType = {
   hyp: { value: "hyp", alpha: "C" },
   x: { value: "x" },
   "( - )": { value: "-", shift: "\\angle", alpha: "A" },
+  MODE: { value: "MODE" },
 
   // Added keys from converter
   "x!": { value: "!" },
   "%": { value: "%" },
+
+  // Keys from base
+  DEC: { value: "DEC" },
+  HEX: { value: "HEX" },
+  OCT: { value: "OCT" },
+  BIN: { value: "BIN" },
+  AND: { value: "AND" },
+  OR: { value: "OR" },
+  XOR: { value: "XOR" },
+  NOT: { value: "NOT" },
+  A: { value: "A" },
+  B: { value: "B" },
+  C: { value: "C" },
+  D: { value: "D" },
+  E: { value: "A" },
+  F: { value: "F" },
 };

@@ -8,6 +8,7 @@ import Hyperbolic, { HypeItemProps } from "@/components/Hyperbolic";
 import MathQuillEditor, {
   MathQuillEditorRef,
 } from "@/components/MathQuillEditor";
+import Mode from "@/components/Mode";
 import SmallButton from "@/components/SmallButton";
 import { Colors } from "@/constants/Colors";
 import { useMemory } from "@/hooks/memoryContext";
@@ -31,6 +32,7 @@ export default function MainScreen() {
   const [stoPressed, setStoPressed] = useState<boolean>(false);
   const [rclPressed, setRclPressed] = useState<boolean>(false);
   const [hypPressed, setHypPressed] = useState<boolean>(false);
+  const [modepPressed, setModePressed] = useState<boolean>(false);
 
   const [answer, setAnswer] = useState<string>("");
   const [ansMemory, setAnsMemory] = useState<string>("0");
@@ -124,6 +126,7 @@ export default function MainScreen() {
     "M-",
     "CLR ALL",
     "Ran#",
+    "MODE",
   ];
 
   const latexToExpression = (latex: string): string => {
@@ -368,9 +371,14 @@ export default function MainScreen() {
             break;
           }
 
-          case "Ran#":
+          case "Ran#": {
             const ran = math.random();
             mathRef.current?.insert(ran.toString());
+            break;
+          }
+
+          case "MODE":
+            setModePressed(true);
             break;
         }
       } else {
@@ -523,7 +531,7 @@ export default function MainScreen() {
 
             <SmallButton label="◀" fxn={btnClicked} />
             <SmallButton label="▶" fxn={btnClicked} />
-            <SmallButton label="MODE" />
+            <SmallButton label="MODE" fxn={btnClicked} />
             <SmallButton label="x" fxn={btnClicked} />
           </View>
           {/* small buttons */}
@@ -615,6 +623,8 @@ export default function MainScreen() {
       {hypPressed && (
         <Hyperbolic setHypPressed={setHypPressed} getHypItem={getHypItem} />
       )}
+
+      {modepPressed && <Mode setModePressed={setModePressed} />}
     </SafeAreaView>
   );
 }
