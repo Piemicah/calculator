@@ -10,6 +10,7 @@ import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+const math = require("mathjs");
 
 type BaseType = {
   name: string;
@@ -22,6 +23,7 @@ const BaseScreen = () => {
   const [answer, setAnswer] = useState<string>("");
   const [base, setBase] = useState<BaseType>({ name: "Dec", value: 10 });
   const [dec, setDec] = useState<number>(0);
+  const [ansMemory, setAnsMemory] = useState<string>("0");
   const { isLandscape } = useOrientation();
 
   const WIDTH = isLandscape ? 48 : 74;
@@ -49,11 +51,10 @@ const BaseScreen = () => {
             break;
           case "DEL":
             mathRef.current?.deleteLeft();
-            //   convert();
+
             break;
 
           case "=":
-            toDec();
             convert();
 
             break;
@@ -66,24 +67,20 @@ const BaseScreen = () => {
 
           case "DEC":
             setBase({ name: "Dec", value: 10 });
-            // toDec();
             break;
           case "HEX":
             setBase({ name: "Hex", value: 16 });
-            // toDec();
+            toBase();
             break;
           case "OCT":
             setBase({ name: "Oct", value: 8 });
-            // toDec();
             break;
           case "BIN":
             setBase({ name: "Bin", value: 2 });
-            // toDec();
             break;
         }
       } else {
         mathRef.current?.insert(label);
-        // convert();
       }
     } catch (error: any) {
       console.log(error);
@@ -91,20 +88,83 @@ const BaseScreen = () => {
     }
   };
 
-  const convert = () => {
-    const remainder = "0123456789ABCDEF";
-    let orders = "";
-    let q = 0;
-    let n = dec;
-    let b = base.value;
-    do {
-      q = Math.floor(n / b);
-      let r = n % b;
-      orders += remainder[r];
-      n = q;
-    } while (q != 0);
+  useEffect(() => {
+    if (dec !== null) {
+      toBase();
+    } else {
+      setAnswer("");
+    }
+  }, [base]);
 
-    setAnswer(orders.split("").reverse().join(""));
+  const toBase = () => {
+    const result = dec;
+    let output: string;
+    switch (base.value) {
+      case 2:
+        output = (result >>> 0).toString(2).toUpperCase();
+        break;
+      case 8:
+        output = (result >>> 0).toString(8).toUpperCase();
+        break;
+      case 16:
+        output = (result >>> 0).toString(16).toUpperCase();
+        break;
+      default:
+        output = result.toString();
+    }
+    setAnswer(output);
+  };
+  const convert = () => {
+    try {
+      let expr = latexToExpression(latex).toUpperCase(); // e.g. "FF*2"
+
+      expr = expr
+        // Allow operators to appear without spaces (e.g., 1AND1, FFOR1, etc.)
+        .replace(/([0-9A-F]+)AND([0-9A-F]+)/gi, "$1 & $2")
+        .replace(/([0-9A-F]+)OR([0-9A-F]+)/gi, "$1 | $2")
+        .replace(/([0-9A-F]+)XOR([0-9A-F]+)/gi, "bitXor($1,$2)")
+        .replace(/NOT([0-9A-F]+)/gi, "~ $1")
+        // handle versions with spaces too
+        .replace(/\bAND\b/gi, "&")
+        .replace(/\bOR\b/gi, "|")
+        .replace(/\bXOR\b/gi, "bitXor($1,$2)")
+        .replace(/\bNOT\b/gi, "~");
+
+      let decimalExpr = expr;
+
+      // If base is not decimal, convert all base digits to decimal before eval
+      if (base.value !== 10) {
+        // Replace all hex-like tokens (A-F or digits) with decimal equivalents
+        decimalExpr = expr.replace(/[0-9A-F]+/g, (match) => {
+          return parseInt(match, base.value).toString();
+        });
+      }
+
+      // Evaluate the decimal expression using mathjs
+      const result = math.evaluate(decimalExpr);
+      setDec(result);
+      console.log({ logi: expr });
+      // Convert result back to selected base
+      let output: string;
+      switch (base.value) {
+        case 2:
+          output = (result >>> 0).toString(2).toUpperCase();
+          break;
+        case 8:
+          output = (result >>> 0).toString(8).toUpperCase();
+          break;
+        case 16:
+          output = (result >>> 0).toString(16).toUpperCase();
+          break;
+        default:
+          output = result.toString();
+      }
+
+      setAnswer(output);
+    } catch (error: any) {
+      console.log("Error in convert:", error);
+      setAnswer("Error");
+    }
   };
 
   const latexToExpression = (latex: string): string => {
@@ -113,44 +173,14 @@ const BaseScreen = () => {
       .replace(/}/g, ")")
       .replace(/\\times/g, "*")
       .replace(/\\div/g, "/");
-    //   .replace(/A/g, "(10)")
-    //   .replace(/B/g, "(11)")
-    //   .replace(/C/g, "(12)")
-    //   .replace(/D/g, "(13)")
-    //   .replace(/E/g, "(14)")
-    //   .replace(/F/g, "15");
-
     return expression;
-  };
-
-  const toDec = () => {
-    const expr = latexToExpression(latex);
-    const evaluation = expr;
-    let num = 0;
-    for (
-      let i = 0, j = evaluation.length - 1;
-      i < evaluation.length;
-      i++, j--
-    ) {
-      let n = 0;
-      let c = evaluation[i];
-
-      if (c === "A") n = 10;
-      else if (c === "B") n = 11;
-      else if (c === "C") n = 12;
-      else if (c === "D") n = 13;
-      else if (c === "E") n = 14;
-      else if (c === "F") n = 15;
-      else n = Number(c);
-      num += n * base.value ** j;
-    }
-    setDec(num);
   };
 
   useEffect(() => {
     setBase({ name: "Dec", value: 10 });
   }, []);
-
+  console.log({ latex });
+  console.log({ expr: latexToExpression(latex) });
   return (
     <SafeAreaView className="flex-1 bg-defaultBg px-2">
       <View className={`bg-[#2e2e2e] w-full py-2`}>
@@ -228,28 +258,26 @@ const BaseScreen = () => {
           </View>
         </View>
 
-        <View className={`gap-4 ${isLandscape ? "w-1/3 mt-4" : "w-full"}`}>
-          <View
-            className={`flex-row ${isLandscape ? "gap-2" : "justify-between"} w-full`}
-          >
+        <View
+          className={`${isLandscape ? "gap-1 mt-4 w-1/3" : "gap-4 w-full"}`}
+        >
+          <View className="flex-row justify-between w-full">
             <ConverterButton label="0" fxn={btnClicked} width={WIDTH} />
-
             <ConverterButton label="A" fxn={btnClicked} width={WIDTH} />
             <ConverterButton label="B" fxn={btnClicked} width={WIDTH} />
             <ConverterButton label="-" fxn={btnClicked} width={WIDTH} />
           </View>
-        </View>
 
-        <View className={`gap-4 ${isLandscape ? "w-1/3 mt-4" : "w-full"}`}>
-          <View
-            className={`flex-row ${isLandscape ? "gap-2" : "justify-between"} w-full`}
-          >
+          <View className="flex-row justify-between w-full">
             <ConverterButton label="C" fxn={btnClicked} width={WIDTH} />
             <ConverterButton label="D" fxn={btnClicked} width={WIDTH} />
             <ConverterButton label="E" fxn={btnClicked} width={WIDTH} />
             <ConverterButton label="F" fxn={btnClicked} width={WIDTH} />
           </View>
-          <ConverterButton label="=" fxn={btnClicked} width={WIDTH} />
+
+          <View className="items-center">
+            <ConverterButton label="=" fxn={btnClicked} width={120} />
+          </View>
         </View>
       </View>
     </SafeAreaView>

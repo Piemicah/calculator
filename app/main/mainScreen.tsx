@@ -400,7 +400,7 @@ export default function MainScreen() {
         setHypPressed(false);
       }
     } catch (error: any) {
-      setAnswer("Math Error!");
+      setAnswer("Syntax Error!");
       console.log(error);
     } finally {
       setShiftPressed(false);
@@ -541,16 +541,16 @@ export default function MainScreen() {
               <SmallButton label="∫dx" cap1="d/dx" mid=":" fxn={btnClicked} />
               <SmallButton label="▲" cap1=" " fxn={btnClicked} />
               <SmallButton label="▼" cap1=" " fxn={btnClicked} />
-              <SmallButton label="x⁻¹" cap1="x!" mid="LOGIC" fxn={btnClicked} />
+              <SmallButton label="x⁻¹" cap1="x!" fxn={btnClicked} />
               <SmallButton label="CONS" cap2="CONV" fxn={btnClicked} />
             </View>
             <View className="flex-row justify-between w-full">
               <SmallButton label="a b/c" cap1="d/c" fxn={btnClicked} />
               <SmallButton label="√" cap1="∛" fxn={btnClicked} />
-              <SmallButton label="x²" cap1="x³" mid="DEC" fxn={btnClicked} />
-              <SmallButton label="xⁿ" cap1="ˣ√" mid="HEX" fxn={btnClicked} />
-              <SmallButton label="log" cap1="10ˣ" mid="BIN" fxn={btnClicked} />
-              <SmallButton label="ln" cap1="eˣ" mid="OCT" fxn={btnClicked} />
+              <SmallButton label="x²" cap1="x³" fxn={btnClicked} />
+              <SmallButton label="xⁿ" cap1="ˣ√" fxn={btnClicked} />
+              <SmallButton label="log" cap1="10ˣ" fxn={btnClicked} />
+              <SmallButton label="ln" cap1="eˣ" fxn={btnClicked} />
             </View>
             <View className="flex-row justify-between w-full">
               <SmallButton label="( - )" cap1="∠" mid="A" fxn={btnClicked} />
@@ -592,15 +592,15 @@ export default function MainScreen() {
             <BigButton label="1" cap2="[S-SUM]" mid="f" fxn={btnClicked} />
             <BigButton label="2" cap2="[S-VAR]" mid="p" fxn={btnClicked} />
             <BigButton label="3" cap2="[DISTR]" mid="n" fxn={btnClicked} />
-            <BigButton label="+" cap2="[r∠θ]" cap1="Pol(" fxn={btnClicked} />
-            <BigButton label="-" cap2="[a+bi]" cap1="Rec(" fxn={btnClicked} />
+            <BigButton label="+" mid="Pol(" fxn={btnClicked} />
+            <BigButton label="-" mid="Rec(" fxn={btnClicked} />
           </View>
           <View className="flex-row justify-between w-full">
             <BigButton label="0" mid="RandInt" fxn={btnClicked} />
             <BigButton label="•" mid="Ran#" fxn={btnClicked} />
             <BigButton label="EXP" mid="π" cap2="∞" fxn={btnClicked} />
             <BigButton label="Ans" cap1="DRG>" fxn={btnClicked} />
-            <BigButton label="=" cap2="[Re-Im]" cap1="%" fxn={btnClicked} />
+            <BigButton label="=" mid="%" fxn={btnClicked} />
           </View>
         </View>
       </View>
