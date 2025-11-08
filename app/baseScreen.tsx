@@ -22,7 +22,7 @@ const BaseScreen = () => {
   const [latex, setLatex] = useState<string>("");
   const [answer, setAnswer] = useState<string>("");
   const [base, setBase] = useState<BaseType>({ name: "Dec", value: 10 });
-  const [dec, setDec] = useState<number>(0);
+  const [dec, setDec] = useState<number | null>(null);
   const [ansMemory, setAnsMemory] = useState<string>("0");
   const { isLandscape } = useOrientation();
 
@@ -48,6 +48,7 @@ const BaseScreen = () => {
           case "AC":
             mathRef.current?.clear();
             setAnswer("");
+            setDec(null);
             break;
           case "DEL":
             mathRef.current?.deleteLeft();
@@ -56,7 +57,6 @@ const BaseScreen = () => {
 
           case "=":
             convert();
-
             break;
 
           case "◀":
@@ -88,31 +88,28 @@ const BaseScreen = () => {
     }
   };
 
-  useEffect(() => {
-    if (dec !== null) {
-      toBase();
-    } else {
-      setAnswer("");
-    }
-  }, [base]);
-
   const toBase = () => {
     const result = dec;
-    let output: string;
-    switch (base.value) {
-      case 2:
-        output = (result >>> 0).toString(2).toUpperCase();
-        break;
-      case 8:
-        output = (result >>> 0).toString(8).toUpperCase();
-        break;
-      case 16:
-        output = (result >>> 0).toString(16).toUpperCase();
-        break;
-      default:
-        output = result.toString();
-    }
-    setAnswer(output);
+    if (result)
+      try {
+        let output: string;
+        switch (base.value) {
+          case 2:
+            output = (result >>> 0).toString(2).toUpperCase();
+            break;
+          case 8:
+            output = (result >>> 0).toString(8).toUpperCase();
+            break;
+          case 16:
+            output = (result >>> 0).toString(16).toUpperCase();
+            break;
+          default:
+            output = result.toString();
+        }
+        setAnswer(output);
+      } catch {
+        setAnswer("Syntax error!");
+      }
   };
   const convert = () => {
     try {
@@ -142,8 +139,8 @@ const BaseScreen = () => {
 
       // Evaluate the decimal expression using mathjs
       const result = math.evaluate(decimalExpr);
-      setDec(result);
-      console.log({ logi: expr });
+      setDec(Number(result));
+
       // Convert result back to selected base
       let output: string;
       switch (base.value) {
@@ -163,7 +160,7 @@ const BaseScreen = () => {
       setAnswer(output);
     } catch (error: any) {
       console.log("Error in convert:", error);
-      setAnswer("Error");
+      setAnswer("");
     }
   };
 
@@ -179,8 +176,23 @@ const BaseScreen = () => {
   useEffect(() => {
     setBase({ name: "Dec", value: 10 });
   }, []);
-  console.log({ latex });
-  console.log({ expr: latexToExpression(latex) });
+
+  useEffect(() => {
+    if (dec !== null && latex !== "") {
+      toBase();
+    } else {
+      setAnswer("");
+    }
+  }, [base]);
+
+  useEffect(() => {
+    if (latex !== "") {
+      convert();
+    } else {
+      setAnswer("");
+    }
+  }, [latex]);
+
   return (
     <SafeAreaView className="flex-1 bg-defaultBg px-2">
       <View className={`bg-[#2e2e2e] w-full py-2`}>
@@ -262,8 +274,8 @@ const BaseScreen = () => {
           className={`${isLandscape ? "gap-1 mt-4 w-1/3" : "gap-4 w-full"}`}
         >
           <View className="flex-row justify-between w-full">
-            <ConverterButton label="0" fxn={btnClicked} width={WIDTH} />
             <ConverterButton label="A" fxn={btnClicked} width={WIDTH} />
+            <ConverterButton label="0" fxn={btnClicked} width={WIDTH} />
             <ConverterButton label="B" fxn={btnClicked} width={WIDTH} />
             <ConverterButton label="-" fxn={btnClicked} width={WIDTH} />
           </View>

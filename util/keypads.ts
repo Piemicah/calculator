@@ -72,6 +72,6 @@ export const keys: KeyType = {
   B: { value: "B" },
   C: { value: "C" },
   D: { value: "D" },
-  E: { value: "A" },
+  E: { value: "E" },
   F: { value: "F" },
 };
