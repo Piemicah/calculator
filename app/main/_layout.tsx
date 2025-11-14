@@ -1,8 +1,9 @@
 import Menu from "@/components/Menu";
 import Drawer from "expo-router/drawer";
 import React from "react";
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import pieLogo from "../../assets/images/piemicahWhite.png";
 
 const MainScreenLayout = () => {
   return (
@@ -24,6 +25,13 @@ const MainScreenLayout = () => {
           </View>
           <Menu {...props} />
           <View className="items-center p-4">
+            <Image
+              className="size-[60px] mb-2"
+              source={typeof pieLogo === "string" ? { uri: pieLogo } : pieLogo}
+              resizeMode="contain"
+              resizeMethod="resize"
+            />
+
             <Text className="text-[#cecece]">© Piemicah Institutes</Text>
             <Text className="text-[#cecece]">nuges1.62@gmailcom</Text>
             <Text className="text-[#cecece]">+2347030829634</Text>

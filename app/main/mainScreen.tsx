@@ -4,6 +4,7 @@ import BottomSheetList, {
 } from "@/components/BottomSheetList";
 
 import DisplayScreen from "@/components/DisplayScreen";
+import FixedSetting from "@/components/FixedSetting";
 import Hyperbolic, { HypeItemProps } from "@/components/Hyperbolic";
 import MathQuillEditor, {
   MathQuillEditorRef,
@@ -33,6 +34,12 @@ export default function MainScreen() {
   const [rclPressed, setRclPressed] = useState<boolean>(false);
   const [hypPressed, setHypPressed] = useState<boolean>(false);
   const [modepPressed, setModePressed] = useState<boolean>(false);
+  const [engpPressed, setEngPressed] = useState<boolean>(false);
+  const [fixedValue, setFixedValue] = useState<number>();
+  const [displayMode, setDisplayMode] = useState({
+    normal: true,
+    fixed: false,
+  });
 
   const [answer, setAnswer] = useState<string>("");
   const [ansMemory, setAnsMemory] = useState<string>("0");
@@ -305,7 +312,9 @@ export default function MainScreen() {
             const expr = latexToExpression(latex);
             const ans = math.evaluate(expr);
 
-            setAnswer(String(ans));
+            setAnswer(
+              String(displayMode.fixed ? ans.toFixed(fixedValue) : ans)
+            );
             setAnsMemory(String(ans));
             break;
           }
@@ -377,9 +386,15 @@ export default function MainScreen() {
             break;
           }
 
-          case "MODE":
+          case "MODE": {
             setModePressed(true);
             break;
+          }
+
+          case "ENG": {
+            setEngPressed(true);
+            break;
+          }
         }
       } else {
         if (stoPressed && keys[key].alpha) {
@@ -424,6 +439,8 @@ export default function MainScreen() {
   };
   console.log({ expr: latexToExpression(latex) });
   console.log({ latex });
+  console.log(displayMode);
+  console.log({ fixedValue });
 
   return (
     <SafeAreaView
@@ -625,6 +642,13 @@ export default function MainScreen() {
       )}
 
       {modepPressed && <Mode setModePressed={setModePressed} />}
+      {engpPressed && (
+        <FixedSetting
+          setEngPressed={setEngPressed}
+          setDisplayMode={setDisplayMode}
+          setFxValue={setFixedValue}
+        />
+      )}
     </SafeAreaView>
   );
 }
