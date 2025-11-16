@@ -101,6 +101,13 @@ const ConverterScreen = () => {
   };
 
   const specialBtns = ["DEL", "AC", "=", "◀", "▶", "ENG"];
+  const moveLeftOperators = [
+    "\\sqrt{}",
+    "^{}",
+    "\\log()",
+    "\\ln()",
+    "\\times 10^{}",
+  ];
 
   const btnClicked = async (key: string) => {
     const label = keys[key].value!;
@@ -129,6 +136,8 @@ const ConverterScreen = () => {
         }
       } else {
         mathRef.current?.insert(label);
+        if (label === "\\frac{}{}") mathRef.current?.moveUp(1);
+        if (moveLeftOperators.includes(label)) mathRef.current?.moveLeft(1);
         convert();
       }
     } catch (error: any) {

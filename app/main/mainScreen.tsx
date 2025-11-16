@@ -35,7 +35,7 @@ export default function MainScreen() {
   const [hypPressed, setHypPressed] = useState<boolean>(false);
   const [modepPressed, setModePressed] = useState<boolean>(false);
   const [engpPressed, setEngPressed] = useState<boolean>(false);
-  const [fixedValue, setFixedValue] = useState<number>();
+  const [fixedValue, setFixedValue] = useState<number>(0);
   const [displayMode, setDisplayMode] = useState({
     normal: true,
     fixed: false,
@@ -134,6 +134,28 @@ export default function MainScreen() {
     "CLR ALL",
     "Ran#",
     "MODE",
+  ];
+
+  const moveLeftOperators = [
+    "\\sqrt{}",
+    "^{}",
+    "10^{}",
+    "\\sin()",
+    "\\cos()",
+    "\\tan()",
+    "\\sin^{-1}()",
+    "\\cos^{-1}()",
+    "\\tan^{-1}()",
+    "\\log()",
+    "\\ln()",
+    "\\nthroot3{}",
+    "e^{}",
+    "\\times 10^{}",
+    "GCD()",
+    "LCM()",
+    "RandInt()",
+    "Pol()",
+    "Rec()",
   ];
 
   const latexToExpression = (latex: string): string => {
@@ -294,7 +316,7 @@ export default function MainScreen() {
           ? keys[key].alpha
           : keys[key].value
     ) as string;
-    console.log(label);
+    // console.log(label);
     try {
       if (specialBtns.includes(label)) {
         switch (label) {
@@ -313,8 +335,15 @@ export default function MainScreen() {
             const ans = math.evaluate(expr);
 
             setAnswer(
-              String(displayMode.fixed ? ans.toFixed(fixedValue) : ans)
+              String(
+                displayMode.fixed
+                  ? typeof ans === "number"
+                    ? ans.toFixed(fixedValue)
+                    : ans
+                  : ans
+              )
             );
+
             setAnsMemory(String(ans));
             break;
           }
@@ -409,7 +438,17 @@ export default function MainScreen() {
           setAnswer(mm);
 
           mathRef.current?.insert(label);
-        } else mathRef.current?.insert(label);
+        } else {
+          mathRef.current?.insert(label);
+          if (moveLeftOperators.includes(label)) mathRef.current?.moveLeft(1);
+          if (label === "\\frac{}{}") mathRef.current?.moveUp(1);
+          if (label === "\\int_{}^{}() dx") mathRef.current?.moveLeft(3);
+          if (label === "\\nthroot{}{}") mathRef.current?.moveLeft(2);
+          if (label === "\\frac{d()}{dx}") {
+            mathRef.current?.moveUp(1);
+            mathRef.current?.moveLeft(1);
+          }
+        }
         setRclPressed(false);
         setStoPressed(false);
         setHypPressed(false);
@@ -420,7 +459,6 @@ export default function MainScreen() {
     } finally {
       setShiftPressed(false);
       setAlphaPressed(false);
-      // setRclPressed(false);
     }
   };
 
@@ -436,11 +474,12 @@ export default function MainScreen() {
 
   const getHypItem = (item: HypeItemProps) => {
     mathRef.current?.insert(item.value);
+    mathRef.current?.moveLeft(1);
   };
-  console.log({ expr: latexToExpression(latex) });
-  console.log({ latex });
-  console.log(displayMode);
-  console.log({ fixedValue });
+  // console.log({ expr: latexToExpression(latex) });
+  // console.log({ latex });
+  // console.log(displayMode);
+  // console.log({ fixedValue });
 
   return (
     <SafeAreaView
@@ -473,9 +512,16 @@ export default function MainScreen() {
               RCL
             </Text>
           )}
-          <Text className={`${optionTxtColor}  text-[11px] font-bold`}>
-            NORM
-          </Text>
+          {displayMode.normal && (
+            <Text className={`${optionTxtColor}  text-[11px] font-bold`}>
+              NORM
+            </Text>
+          )}
+          {displayMode.fixed && (
+            <Text className={`${optionTxtColor}  text-[11px] font-bold`}>
+              FIX
+            </Text>
+          )}
           <Text className={`${optionTxtColor}  text-[11px] font-bold`}>
             MATH
           </Text>
@@ -599,16 +645,16 @@ export default function MainScreen() {
             <BigButton label="AC" mid="CLR ALL" fxn={btnClicked} />
           </View>
           <View className="flex-row justify-between w-full">
-            <BigButton label="4" cap2="[MAT]" mid="µ" fxn={btnClicked} />
-            <BigButton label="5" cap2="[VCT]" mid="m" fxn={btnClicked} />
+            <BigButton label="4" mid="µ" fxn={btnClicked} />
+            <BigButton label="5" mid="m" fxn={btnClicked} />
             <BigButton label="6" mid="k" fxn={btnClicked} />
             <BigButton label="×" mid="nPr" cap2="GCD" fxn={btnClicked} />
             <BigButton label="÷" mid="nCr" cap2="LCM" fxn={btnClicked} />
           </View>
           <View className="flex-row justify-between w-full">
-            <BigButton label="1" cap2="[S-SUM]" mid="f" fxn={btnClicked} />
-            <BigButton label="2" cap2="[S-VAR]" mid="p" fxn={btnClicked} />
-            <BigButton label="3" cap2="[DISTR]" mid="n" fxn={btnClicked} />
+            <BigButton label="1" mid="f" fxn={btnClicked} />
+            <BigButton label="2" mid="p" fxn={btnClicked} />
+            <BigButton label="3" mid="n" fxn={btnClicked} />
             <BigButton label="+" mid="Pol(" fxn={btnClicked} />
             <BigButton label="-" mid="Rec(" fxn={btnClicked} />
           </View>
@@ -616,7 +662,7 @@ export default function MainScreen() {
             <BigButton label="0" mid="RandInt" fxn={btnClicked} />
             <BigButton label="•" mid="Ran#" fxn={btnClicked} />
             <BigButton label="EXP" mid="π" cap2="∞" fxn={btnClicked} />
-            <BigButton label="Ans" cap1="DRG>" fxn={btnClicked} />
+            <BigButton label="Ans" fxn={btnClicked} />
             <BigButton label="=" mid="%" fxn={btnClicked} />
           </View>
         </View>
@@ -647,6 +693,9 @@ export default function MainScreen() {
           setEngPressed={setEngPressed}
           setDisplayMode={setDisplayMode}
           setFxValue={setFixedValue}
+          normal={displayMode.normal}
+          fixed={displayMode.fixed}
+          fvalue={fixedValue}
         />
       )}
     </SafeAreaView>

@@ -12,6 +12,8 @@ export default data;
 export const geometry = [
   { name: "Cylinder", img: images.cylinder },
   { name: "Cone", img: images.cone },
+  { name: "sphere", img: images.sphere },
+  { name: "triangle", img: images.triangle },
 ];
 
 export const mechanics = [

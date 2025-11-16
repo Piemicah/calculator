@@ -1,22 +1,33 @@
 import { Ionicons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type DisplayModeProp = {
   setDisplayMode: (mode: { normal: boolean; fixed: boolean }) => void;
   setEngPressed: (engPressed: boolean) => void;
   setFxValue: (fixedValue: number) => void;
+  normal: boolean;
+  fixed: boolean;
+  fvalue: number;
 };
 
 const FixedSetting = ({
   setDisplayMode,
   setEngPressed,
   setFxValue,
+  normal,
+  fixed,
+  fvalue,
 }: DisplayModeProp) => {
   const [fixedValue, setFixedValue] = useState<number>(0);
-  const [normalPressed, setNormalPressed] = useState<boolean>(false);
-  const [fixedPressed, setFixedPressed] = useState<boolean>(false);
+  const [normalPressed, setNormalPressed] = useState<boolean>(normal);
+  const [fixedPressed, setFixedPressed] = useState<boolean>(fixed);
+
+  useEffect(() => {
+    setFixedValue(fvalue);
+  }, []);
+
   return (
     <View className="h-[240px] absolute top-[150px] right-4 left-4 z-50 bg-defaultBg rounded-xl overflow-hidden">
       <View className="flex-row justify-end h-10 bg-[#161616] pr-2">
@@ -57,6 +68,8 @@ const FixedSetting = ({
         </TouchableOpacity>
         <Text className="ml-2 text-white">Fixed</Text>
         <Slider
+          // onTouchEnd={() => setFxValue(Math.round(fixedValue))}
+          onSlidingComplete={() => setFxValue(Math.round(fixedValue))}
           className="w-[80px] h-10"
           style={{ width: 200, height: 40 }}
           value={fixedValue}
@@ -64,10 +77,7 @@ const FixedSetting = ({
           maximumValue={10}
           minimumTrackTintColor="#FF00FF"
           maximumTrackTintColor="#a8a8a8"
-          onValueChange={(e) => {
-            setFixedValue(e);
-            setFxValue(Math.round(e));
-          }}
+          onValueChange={setFixedValue}
         />
         <Text className="text-white">{Math.round(fixedValue)}</Text>
       </View>

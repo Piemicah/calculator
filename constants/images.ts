@@ -1,5 +1,7 @@
 import cone from "../assets/images/equations/maths/geometry/cone.png";
 import cylinder from "../assets/images/equations/maths/geometry/cylinder.png";
+import sphere from "../assets/images/equations/maths/geometry/sphere.png";
+import triangle from "../assets/images/equations/maths/geometry/triangle.png";
 import pendulum from "../assets/images/equations/physics/mechanics/pendulum.png";
 import projectile from "../assets/images/equations/physics/mechanics/projectile.png";
 import straight_motion from "../assets/images/equations/physics/mechanics/straight_motion.png";
@@ -56,6 +58,8 @@ export default {
   pendulum,
   projectile,
   exchange,
+  triangle,
+  sphere,
 
   // dimension
   length,
